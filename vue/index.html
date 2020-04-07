@@ -1,0 +1,39 @@
+<html>
+    <body>
+        <div id="app">
+            <input name="name" v-modal = "school.name" />
+            <div>{{ school.name }}</div>
+            <div>{{ school.age }}</div>
+            {{getNewName}}
+            <ul>
+                <li>1</li>
+                <li>2</li>
+            </ul>
+            <div v-html="message"></div>
+            <button v-on:click="changeName">按钮</button>
+        </div>
+    </body>
+    <script src="VUE.js"></script>
+    <script>
+        let vm = new Vue({
+            el: "#app",
+            data: {
+                school: {
+                    name:'ECNU',
+                    age: 64
+                },
+                message: '<h4>title</h4>'
+            },
+            computed: {
+                getNewName(){
+                    return this.school.name + 'TEST'
+                }
+            },
+            methods: {
+                changeName() {
+                    this.school.name = "华师大"
+                }
+            }
+        })
+    </script>
+</html>

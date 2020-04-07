@@ -1,0 +1,105 @@
+<style></style>
+<body></body>
+<script src="HD.js"></script>
+<script>
+  console.log("start");
+  new HD((resolve, reject) => {
+    setTimeout(() => {
+      // console.log("a")
+      resolve("solved");
+      // reject('reject')
+      // console.log("after reject");
+    });
+  })
+    .then(
+      value => {
+        // console.log(a);
+        console.log("resolved outter", value);
+        return new HD((resolve, reject) => {
+          // resolve("aaaa")
+          reject("aaaa");
+        });
+        // return "a"
+      },
+      reason => {
+        // console.log(b);
+        console.log("rejected outter", reason);
+        // return new HD((resolve, reject)=>{
+        //   resolve("bbbb")
+        // })
+        return "b";
+      }
+    )
+    // .then()
+    .then(
+      value => {
+        // console.log(a);
+        console.log("resolved outter2", value);
+      },
+      reason => {
+        // console.log(b);
+        console.log("rejected outter2", reason);
+      }
+    );
+  console.log("outter");
+
+  
+
+  let p1 = new HD((resolve, reject) => {
+    setTimeout(() => {
+      resolve("aaa");
+    }, 2000);
+  });
+
+  let p2 = new HD((resolve, reject) => {
+    setTimeout(() => {
+      reject("bbb");
+    }, 1000);
+  });
+
+  // HD.resolve("abc").then(value=>{
+  //   console.log(value);
+  // })
+  
+  HD.reject(p2).then(null,value=>{
+    console.log("afas",value);
+  })
+
+  // HD.all([p1,p2]).then(values=>{
+  //   console.log(values);
+  // },reason=>{
+  //   console.log(reason);
+  // })
+
+  HD.race([p1, p2]).then(
+    values => {
+      console.log(values);
+    },
+    reason => {
+      console.log(reason);
+    }
+  );
+
+  // new Promise((resolve, reject)=>{
+  //   resolve('a')
+  // }).then(value=>{
+  //   console.log(a);
+  //   console.log("resolved outter",value);
+  // }, reason=>{
+  //   console.log("rejected outter", reason);
+  // });
+
+  // let promise = new Promise((resolve,reject)=>{
+  //   resolve("a")
+  // })
+  // let p = promise.then((value)=>{
+  //   return p
+  // })
+
+  // let promise = new HD((resolve, reject) => {
+  //   resolve("a");
+  // });
+  // let p = promise.then(value => {
+  //   return p;
+  // });
+</script>

@@ -1,0 +1,424 @@
+<html>
+
+<head>
+  <style scoped>
+    body {
+      padding: 0;
+      margin: 0;
+      overflow-x: hidden;
+      /* background: #ccc; */
+    }
+
+    .page {
+      background: #fff;
+      position: relative;
+      width: 21cm;
+      /* height: 29.68cm; */
+      display: block;
+      page-break-after: auto;
+      overflow: hidden;
+      padding: 20px 15px;
+    }
+
+    /* header */
+    header {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin: 10px 0;
+    }
+
+    .name {
+      color: black;
+      font-size: 18px;
+      font-weight: bold;
+      letter-spacing: .1em;
+      line-height: 2em;
+    }
+
+    header>div {
+      color: gray;
+      font-size: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      line-height: 1.5em;
+    }
+
+ 
+    header>div .info {
+      width: 70%;
+    }
+    header>div .contact {
+      width: 100%;
+    }
+    header>div .info,
+    header>div .job,
+    header>div .contact {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 5px;
+    }
+
+    header .contact a {
+      text-decoration: none;
+    }
+
+    header .contact a:hover,
+    header .contact a:visited,
+    header .contact a:link {
+      text-decoration: none;
+      color: gray;
+    }
+
+    header .contact span {
+      display: flex;
+      align-items: center;
+    }
+
+    header .contact span img {
+      width: 20px;
+      height: 20px;
+      margin-right: 2px;
+    }
+
+    .header {
+      margin: 10px 0;
+    }
+
+    .header_title {
+      display: flex;
+      justify-content: space-between;
+      font-size: 16px;
+      line-height: 2em;
+    }
+
+    .header_title .name {
+      font-weight: bold;
+    }
+
+    .header_title .word {
+      color: #999898;
+      font-size: 14px;
+    }
+
+    .header_info {
+      line-height: 1.5em;
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+    }
+
+    .header_info span {
+      flex-basis: 25%;
+      display: flex;
+    }
+
+    .header_info span img {
+      width: 20px;
+      height: 20px;
+    }
+
+    /* header>div .info span {
+        border-right: 1px solid #ccc;
+      }
+      header>div .info span:last-child {
+        border-right: none;
+      } */
+    article {
+      border-top: 1px solid #e8e8e8;
+      position: relative;
+      padding-top: 15px;
+      padding-right: 20px;
+    }
+
+    .article_title {
+      position: relative;
+      padding-left: 25px;
+      font-size: 16px;
+      font-weight: bold;
+      color: #607D8B;
+    }
+
+    .article_title::before {
+      content: "";
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      left: 0px;
+      background-color: #03A9F4;
+    }
+
+
+    .card {
+      margin: 10px 0;
+      line-height: 1.5em;
+    }
+
+    ul.card {
+      font-size: 14px;
+      line-height: 1.8em;
+    }
+
+    .card_title {
+      font-size: 14px;
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .card_title div:nth-of-type(2) {
+      font-size: 12px;
+    }
+
+    .work_content::before {
+      content: '职责：'
+    }
+
+    .study_content::before {
+      content: '研究方向：'
+    }
+
+    .card_content {
+      font-size: 14px;
+    }
+
+    /* project */
+    .project_card {
+      margin: 20px 0;
+      line-height: 1.5em;
+      font-size: 14px;
+      /* background-color: #f5f3f3; */
+      /* box-shadow: 0px 0px 1px #cccccc; */
+      padding: 5px;
+    }
+
+    .project_category+.project_card {
+      margin-top: 10px;
+    }
+
+    .project_category {
+      font-size: 16px;
+      font-weight: bold;
+      margin: 10px 0;
+    }
+
+    .project_name::before {
+      content: '项目名称';
+      background-color: #efefef;
+      margin-right: 10px;
+    }
+
+    .project_desc::before {
+      content: '项目描述';
+      background-color: #efefef;
+      margin-right: 10px;
+    }
+
+    .project_tech::before {
+      content: '主要技术';
+      background-color: #efefef;
+      margin-right: 10px;
+    }
+
+    .project_work::before {
+      content: '主要工作';
+      background-color: #efefef;
+      margin-right: 10px;
+    }
+
+    .project_name {
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    <header></header>
+    <!-- <div class="header"></div> -->
+    <article class="work"></article>
+    <article class="study"></article>
+    <article class="skill"></article>
+    <article class="project">
+      <div class="article_title">项目经验</div>
+      <div class="web_project"></div>
+      <div class="hybrid_project"></div>
+      <div class="github_project"></div>
+    </article>
+  </div>
+</body>
+<script type="module">
+  import data from './cv.js';
+  class CV {
+    constructor() {
+      this.data = data;
+    }
+    project_init() {
+      // 以时间顺序挑选部分项目
+      this.web_project();
+      this.hybrid_project();
+      this.github_project();
+    }
+
+    init() {
+      this.basic_1();
+      this.work();
+      this.study();
+      this.skill();
+      this.project_init();
+    }
+    basic_1() {
+      const el = document.querySelector("header");
+      const html = `<div class="name">${data.basic.name} ${data.basic.e_name}</div>
+      <div>
+        <div class="job" style="display:none;">${data.basic.job} ${data.basic.corp}</div>
+        <div class="info">
+          <span>${data.basic.corp}</span>
+          <span>${data.basic.job}</span>
+          <span>${data.basic.experience}年以上工作经验</span>
+          <span>${data.basic.degree}</span>
+        </div>
+        <div class="contact">
+          <span><img src="./tel.png" />${data.basic.tel}</span>
+          <span><img src="./email.png" /><a href="mailto:${data.basic.email}">${data.basic.email}</a></span>  
+          <span><img src="./github.png" /><a href="${data.basic.github}" target="_blank">${data.basic.github}</a></span>
+          <span><img src="./blog.png" /><a href="${data.basic.blog}" target="_blank">${data.basic.blog}</a></span>        
+        </div>
+      </div>`;
+      el.innerHTML = html;
+    }
+    basic() {
+      const el = document.querySelector(".header");
+      const html = `
+      <div class="header_title">
+        <div class="name">${data.basic.name} ${data.basic.e_name}</div>
+        <div class="word">${data.basic.word}</div>
+      </div>
+      <div class="header_info">
+        <span>${data.basic.corp}</span>
+        <span>${data.basic.job}</span>
+        <span>${data.basic.experience}年以上工作经验</span>
+        <span>${data.basic.degree}</span>
+      </div>
+      <div class="header_info">
+        <span><img src="./tel.png" />${data.basic.tel}</span>
+        <span><img src="./email.png" />${data.basic.email}</span>
+        <span><img src="./github.png" />${data.basic.github}</span>
+        <span><img src="./blog.png" />${data.basic.blog}</span>
+      </div>`;
+      el.innerHTML = html;
+    }
+
+    work() {
+      const el = document.querySelector(".work");
+      if (data.works.length == 0) {
+        el.style.display = 'none';
+      } else {
+        let title = '<div class="article_title">工作经历</div>';
+        const items = data.works.map(data => {
+          return `<div class="card">
+                    <div class="card_title">
+                      <div>${data.corp}</div>
+                      <div>${data.time_from} - ${data.time_to}</div>
+                    </div>
+                    <div class="card_content work_content">${data.content}</div>
+                  </div>`
+        }).join('')
+        el.innerHTML = title + items;
+      }
+    }
+
+    study() {
+      const el = document.querySelector(".study");
+      if (data.study.length == 0) {
+        el.style.display = 'none';
+      } else {
+        let title = '<div class="article_title">教育经历</div>';
+        const items = data.study.map(data => {
+          return `<div class="card">
+                    <div class="card_title">
+                      <div>${data.school}</div>
+                      <div>${data.time_from} - ${data.time_to}</div>
+                    </div>
+                    <div class="card_content study_content">${data.content}</div>
+                  </div>`
+        }).join('')
+        el.innerHTML = title + items;
+      }
+    }
+
+    skill() {
+      const el = document.querySelector(".skill");
+      if (data.skills.length == 0) {
+        el.style.display = 'none';
+      } else {
+        let title = '<div class="article_title">专业技能</div>';
+        const items = data.skills.map(item => {
+          return `<li>${item}</li>`
+        }).join('')
+        el.innerHTML = title + '<ul class="card">' + items + '</ul>';
+      }
+    }
+
+    web_project() {
+      const el = document.querySelector(".web_project");
+      if (data.projects.web.length == 0) {
+        el.style.display = 'none';
+      } else {
+        let title = '<div class="project_category">WEB项目</div>';
+        const items = data.projects.web.map(data => {
+          return `<div class="project_card">
+            <div class="project_name">${data.name}</div>
+            <div class="project_desc">${data.desc}</div>
+            <div class="project_tech">${data.tech}</div>
+            <div class="project_work">${data.work}</div>
+          </div>`
+        }).join('')
+        el.innerHTML = title + items;
+      }
+    }
+
+    hybrid_project() {
+      const el = document.querySelector(".hybrid_project");
+      if (data.projects.hybrid.length == 0) {
+        el.style.display = 'none';
+      } else {
+        let title = '<div class="project_category">Hybrid项目</div>';
+        const items = data.projects.hybrid.map(data => {
+          return `<div class="project_card">
+            <div class="project_name">${data.name}</div>
+            <div class="project_desc">${data.desc}</div>
+            <div class="project_tech">${data.tech}</div>
+            <div class="project_work">${data.work}</div>
+          </div>`
+        }).join('')
+        el.innerHTML = title + items;
+      }
+    }
+
+    github_project() {
+      const el = document.querySelector(".github_project");
+      if (data.projects.github.length == 0) {
+        el.style.display = 'none';
+      } else {
+        let title = '<div class="project_category">Github项目</div>';
+        const items = data.projects.github.map(data => {
+          return `<div class="project_card">
+            <div class="project_name">${data.name}</div>
+            <div class="project_desc">${data.desc}</div>
+          </div>`
+        }).join('')
+        el.innerHTML = title + items;
+      }
+    }
+
+  }
+
+  new CV().init();
+</script>
+
+</html>
