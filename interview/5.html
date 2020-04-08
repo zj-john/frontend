@@ -1,0 +1,21 @@
+<script>
+    const S= "mynameisjohnhaha";
+    const T = "john";
+    function has(str, substr) {
+        let reg = new RegExp(T);
+        let match = str.match(substr)
+        return match!=undefined?match.index:-1;
+    }
+    function has1(str, substr) {
+        for(var i=0;i<str.length-substr.length +1;i++) {
+            // substr第二个参数指定获取字符数量
+            if(str.substr(i, substr.length) == substr) {
+                return i;
+                break;
+            }
+        }
+        return -1
+    }
+    // console.log(has(S,T))
+    console.log(has1(S,T))
+</script>

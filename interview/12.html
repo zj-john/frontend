@@ -1,0 +1,16 @@
+<script>
+    function A(a,b) {
+        this.a = a;
+        this.b = b;
+    }
+
+    function new1(func, ...args) {
+        let obj = {};
+        obj.__proto__ = func.prototype;
+        func.call(obj, ...args);
+        return obj;
+    }
+    const a = new A('a', 'b');
+    const b =  new1(A, 'a', 'b');
+    console.log(a, b);
+</script>

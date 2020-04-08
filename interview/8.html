@@ -1,0 +1,8 @@
+<script>
+    const reg = /(?!^[a-z0-9]+$)(?!^[A-Z0-9]+$)(?!^[a-zA-Z]+$)(?!^[0-9]+$)^[a-zA-Z0-9]{6,16}$/;
+    const str = "asdgasdgas"
+    console.log(reg.test(str));
+
+    // 必须要有下划线
+    const reg1 = /(?!^[0-9a-zA-Z]+$)^[0-9a-zA-Z_]{1,10}$/
+</script>

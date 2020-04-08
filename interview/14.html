@@ -1,0 +1,40 @@
+<body>
+    <ul></ul>
+</body>
+
+<script>
+    // 作用域最少
+    (function () {
+        const el = document.querySelector('ul');
+        // 容错
+        if (!el) return;
+
+        let batch_count = 50;
+        let all_count = 300;
+        let i = 0;
+
+        function batchAppend() {
+            const fragment = document.createDocumentFragment();
+            for (let i = 0; i < batch_count; i++) {
+                let elLi = document.createElement('li');
+                elLi.class = 'li-css';
+                elLi.innerHTML = `index-${i}`
+                fragment.appendChild(elLi);
+            }
+            el.append(fragment);            
+        }
+        while(i*batch_count < all_count) {
+            window.requestAnimationFrame(batchAppend);
+            i++;
+        }       
+        
+
+        el.addEventListener('click', function (e) {
+            const target = e.target;
+            if (target.tagName == 'LI') {
+                alert(target.innerHTML);
+            }
+        })
+    })();
+
+</script>

@@ -1,0 +1,25 @@
+<body>
+    <div class="box" id="a"></div>
+    <div class="box"></div>
+    <div class=""></div>
+    <div class="content box"></div>
+    <div class="box" name="b"></div>
+</body>
+<script>
+    function attr(name, value) {
+        const tagAll = document.getElementsByTagName('*');
+        let el_list = [];
+        [...tagAll].forEach(function (el) {
+            let _value = el.getAttribute(name);
+            const reg = new RegExp('\\b' + value + '\\b');
+            if (name == 'class' && reg.test(_value)) {
+                el_list.push(el);
+            }
+            if (name != 'class' && _value == value) {
+                el_list.push(el);
+            }
+        })
+        return el_list
+    }
+    console.dir(attr('class', 'box'))
+</script>

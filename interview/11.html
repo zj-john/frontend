@@ -1,0 +1,24 @@
+<script>
+    const arr = [1,2,[3,4],5,6,1,[1,2,[9,0]]];
+    // 1
+    const newArr1 = Array.prototype.flat.call(arr, Infinity);
+    // 2
+    const newArr2 = arr.toString().split(',');
+    // 3
+    const newArr3 = arr.join(',').split(',');
+    // 4
+    let newArr4 = [];
+    function flat(arr) {
+        if(Array.isArray(arr)) {
+            arr.forEach(item =>{
+                if(Array.isArray(item)) {
+                    flat(item)
+                } else {
+                    newArr4.push(item);
+                }
+            })
+        }
+    }
+    flat(arr);
+    console.log(Array.from(new Set(newArr4), item => Number(item)));
+</script>

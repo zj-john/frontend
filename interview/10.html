@@ -1,0 +1,7 @@
+<script>
+    const str="abc哈哈大使馆dabc阿布哦";
+    const newStr = str.replace(/\b[\w]+\b/g, (item)=>{
+        return " " + item + " ";
+    }).trim();
+    console.log(newStr);
+</script>

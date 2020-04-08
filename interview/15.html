@@ -1,0 +1,73 @@
+<body>
+<div class="root">
+    <div class="container">
+        <section class="sidebar">
+            <ul class="menu"></ul>
+        </section>
+        <section class="main">
+            <article class="post"></article>
+            <p class="copyright"></p>
+        </section>
+    </div>
+</div>
+</body>
+<script>
+
+    class Tree {
+        constructor(el) {
+            this.$el = this.isElement(el)?el:document.querySelector(el);
+            if(!this.$el) {
+                throw new Error('dom not exist')
+            }
+            this.treeArr = [];
+        }
+        get tree(){
+            this.makeTreeArr(this.$el);
+            return this.treeArr
+        }
+        isElement(node) {
+            return node.nodeType == 1 ? true : false;
+        }
+        makeTreeObj(node) {
+            let res = {};
+            if (node.children.length == 0) {
+                return node;
+            } else {
+                [...node.children].forEach((item) => {
+                    const key = item.nodeName + '.' + item.className
+                    res[key] = this.makeTree(item)
+                })
+            }
+            return res;
+        }
+
+        makeTreeArr(node) {
+            this.treeArr.push(node.nodeName + '.' + node.className)
+            if (node.children.length == 0) {
+                return ;
+                // return node.nodeName + '.' + node.className;
+            } else {
+                [...node.children].forEach((item) => {
+                    // const key = item.nodeName + '.' + item.className
+                    const _child = this.makeTreeArr(item); 
+                    if(_child) {
+                        this.treeArr.push(_child)
+                    }
+                    
+                })
+            }
+        }
+    }
+    const sleep = (time) => {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve();
+            }, time)
+        })
+    }
+    let body = document.querySelector('.root');
+    let tree = new Tree(body);
+    console.dir(tree.tree)
+
+
+</script>

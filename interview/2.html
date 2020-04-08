@@ -1,0 +1,14 @@
+<script>  
+    Number.prototype.add = function(num){
+        // + 优先于三元运算符
+        let _num = isNaN(Number(num))?0:Number(num)
+        return this + _num
+        // return this + num
+    }
+    Number.prototype.minus = function(num){
+        // let _num = isNaN(Number(num))?0:Number(num)
+        return this - (isNaN(Number(num))?0:Number(num))
+    }
+ 
+    console.log((5).add(3).minus(2))
+ </script>

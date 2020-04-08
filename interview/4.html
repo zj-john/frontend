@@ -1,0 +1,11 @@
+<script>
+    const str = 'AbdDegeFgeaeS';
+    function switchChar(str) {
+        const reg = /[\w]/g;
+        return str.replace(reg, (item)=>{
+            return item.toUpperCase() === item? item.toLowerCase(): item.toUpperCase();
+        })
+    }
+    console.log(switchChar(str));
+
+</script>

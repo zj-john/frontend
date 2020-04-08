@@ -1,0 +1,5 @@
+<script>
+    const url = "https://www.baidu.com/abc/def/search.html?a=1&b=2#da";
+    const reg = /^(?:(https|http|ftp):\/\/)?((?:[\w\d-]+\.)+[\w\d]+)((?:\/[^/?#]*)+)?(\?[^#]+)?(#.+)?/i
+    console.log(reg.exec(url));
+</script>

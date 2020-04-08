@@ -1,0 +1,35 @@
+<style>
+    div {
+        height: 1000px;
+        margin-bottom: 500px;
+        background-color: silver;
+    }
+    img {
+        width: 100%;
+        height: 500px;
+        /* display: none; */
+        background-color: grey;
+    }
+
+</style>
+<body>
+    <div>
+
+    </div>
+    <img src="" alt="title" data-img="./pic.png" />
+</body>
+<script>
+    function lazyLoad(el) {
+       const el_top_height = el.offset().top + el.height; // el底部距离页面顶部的距离
+       const current_window_height = document.documentElement.clientHeight + document.body.scrollTop; //单屏高度 + 卷起的高度 （有浏览器兼容性）
+       if(el_top_height<current_window_height) {
+        //    debugger;
+           el.src = el.getAttribute('data-img')
+       }
+    }
+    const body = document.querySelector("body");
+    const el = document.querySelector('img');
+    window.addEventListener('scroll',()=>{
+        lazyLoad(el);
+    })
+</script>
