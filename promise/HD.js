@@ -7,7 +7,7 @@ class HD {
     this.value = null;
     this.callbacks = [];
     try {
-        // 因为 resolve或rejected方法在executor中调用，作用域也是executor作用域，这会造成this指向window，现在我们使用的是class定义，this为undefined
+      // 因为 resolve或rejected方法在executor中调用，作用域也是executor作用域，这会造成this指向window，现在我们使用的是class定义，this为undefined
       executor(this.resolve.bind(this), this.reject.bind(this));
     } catch (error) {
       this.reject(error);
@@ -45,7 +45,7 @@ class HD {
       onFulfilled = (value) => value;
     }
     if (typeof onRejected !== "function") {
-    //   onRejected = () => this.value;
+      //   onRejected = () => this.value;
       onRejected = (value) => value;
     }
     let promise = new HD((resolve, reject) => {
@@ -146,5 +146,15 @@ class HD {
         );
       });
     });
+  }
+
+  catch = function (callback) {
+    return this.then(null, callback);
+  }
+  finally = function(cb) {
+    return this.then(
+      data=> HD.resolve(cb()).then(() => data),
+      err => HD.resolve(cb()).then(() => {throw err})
+    );
   }
 }

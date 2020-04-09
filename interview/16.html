@@ -1,0 +1,94 @@
+<html>
+<style>
+    /* @font-face {
+        font-family: '字体名称随便起';
+        src: url('../font/字体名称.eot');
+        src: url('../font/字体名称.woff') format('woff'),
+            url('../font/字体名称.ttf') format('truetype'),
+            url('../font/字体名称.svg') format('svg');
+    } */
+
+    div {
+        display: grid;
+
+    }
+</style>
+
+<body>
+
+</body>
+<script>
+    const arr = [12, 34, 1, 23, 41, 10, 6, 9];
+
+    class Sort {
+        constructor(arr) {
+            this.arr = Array.isArray(arr)?arr:[]
+        }
+        // 冒泡排序
+        bubble() {
+            const len = this.arr.length;
+            let temp = null;
+            for(let i = 0;i<len;i++) {
+                for(let j=0;j<len-i-1;j++) {
+                    if(this.arr[j] >this.arr[j+1]) {
+                        temp = this.arr[j+1];
+                        this.arr[j+1] = this.arr[j];
+                        this.arr[j] = temp;
+                    }
+                }
+            }
+            console.log(this.arr);
+        }
+        // 插入排序
+        insert() {
+            let newArr = [];
+            const len = this.arr.length;
+            newArr[0] = this.arr[0];
+            for(let i=1;i<len;i++) {
+                let item = this.arr[i];
+                for(let j=0;j<newArr.length;j++) {
+                    if(item < newArr[j]) {
+                        newArr.splice(j,0,item)
+                        break;
+                    }
+                    if(j == newArr.length-1) {
+                        newArr.push(item)
+                        break;
+                    }
+                }
+            }
+            console.log(newArr);
+        }
+
+        // 堆排序
+        squid() {
+            function _sort(arr) {
+                if(arr.length<=1) {
+                    return arr;
+                }
+                const middle = arr.slice(arr.length/2, arr.length/2 + 1)[0];
+                let arr_left = [];
+                let arr_right = [];
+                for(let i=0;i<arr.length;i++) {
+                    if(arr[i]<middle) {
+                        arr_left.push(arr[i])
+                    }
+                    if(arr[i]>middle){
+                        arr_right.push(arr[i])                    
+                    }
+                }
+                return _sort(arr_left).concat(middle, _sort(arr_right));
+            }
+            console.log(_sort(this.arr));
+        }
+
+    }
+
+    const sort = new Sort(arr);
+    // sort.bubble();
+    // sort.squid();
+    sort.insert();
+
+</script>
+
+</html>

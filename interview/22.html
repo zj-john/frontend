@@ -1,0 +1,10 @@
+<script>
+    function deepCopy(obj) {
+        let res = obj instanceof Array ? [] : {};
+        // console.log(JSON.stringify(Object.entries(obj), null,2));
+        for ([key, value] of Object.entries(obj)) {
+            res[key] = value instanceof Object ? deepCopy(value) : value
+        }
+        return res;
+    }
+</script>

@@ -1,0 +1,77 @@
+<script>
+    // for(var i = 0;i<10;i++) {
+    //     setTimeout(()=>{
+    //         console.log(new Date(),i);
+    //     },0)        
+    // }
+
+    // for (var i = 0; i < 10; i++) {
+    //     (function (i) {
+    //         setTimeout(() => {
+    //             console.log(new Date(), i);
+    //         }, 1000)
+    //     })(i)
+    // }
+
+    // for (var i = 0; i < 10; i++) {
+    //     setTimeout((i) => {
+    //         console.log(new Date(), i);
+    //     }, 1000, i)
+    // }
+
+    // function fn(i) {
+    //     setTimeout(() => {
+    //         console.log(new Date(), i);
+    //     }, 1000)
+    // }
+    // for (var i = 0; i < 10; i++) {
+    //     fn(i)
+    // }
+    // console.log(new Date(), i);
+    
+
+    // 间隔输出
+    // for (var i = 0; i < 10; i++) {
+    //     setTimeout((i) => {
+    //         console.log(new Date(), i);
+    //     }, 1000*i, i)
+    // }    
+    // setTimeout(()=>{
+    //     console.log(new Date(), i);
+    // }, 1000*i)
+
+    
+    // let cb = []
+    // let fn = function(i) {
+    //     setTimeout(() => {
+    //         console.log(new Date(), i);
+    //     }, 1000*i)
+    // }
+    // for (var i = 0; i < 10; i++) {
+    //     cb.push(fn(i));
+    // }
+    // let index = 0;
+    // let middleware = function(cb) {
+    //     if(index == cb.length) return Promise.resolve();
+    //     return Promise.resolve(cb[index++])
+    // }
+    // middleware(cb);
+    // setTimeout(()=>{
+    //     console.log(new Date(), i);
+    // }, 1000*i)
+
+    const sleep = (time) => {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve();
+            }, time)
+        })
+    }
+    (async function(){
+        for(var i=0;i<10;i++) {
+            await sleep(1000);
+            console.log(new Date(), i);
+        }
+    })()
+    
+</script>

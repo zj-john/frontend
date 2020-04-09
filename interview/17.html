@@ -1,0 +1,12 @@
+<script>
+    const arr = [1,2,3,4,5,6,7,8];
+    function rotate(arr, k) {
+        if(k<0 || k==0 || Number.isNaN(Number(k))) return arr;
+        k = k%arr.length;
+        // return arr.slice(-k).concat(arr.slice(0, arr.length-k));
+        return [...arr.slice(-k) , ...arr.slice(0, arr.length-k)];
+        // return [...arr.splice(arr.length-k), ...arr];
+
+    }
+    console.log(rotate(arr,12))
+</script>

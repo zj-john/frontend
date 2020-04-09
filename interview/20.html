@@ -1,0 +1,11 @@
+<script>
+    function add(...A) {
+        return function(...B) {
+            return function(...C) {
+                return eval([...A,...B,...C].join('+'))
+            }
+        }
+    }
+
+    console.log(add(1)(2)(3))
+</script>

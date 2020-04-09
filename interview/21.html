@@ -1,0 +1,70 @@
+<style>
+    div.tringle {
+        width: 0;
+        height: 0;
+        border: 10px solid silver;
+        border-right-color: transparent;
+        border-top-color: transparent;
+        border-bottom-color: transparent;
+    }
+
+    div.flex {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .flex div {
+        flex-basis: 30%;
+        border: 1px solid black;
+        height: 30px;
+        margin-left: auto;
+    }
+
+    .mask {
+        width: 100px;
+        height: 100px;
+        background: blue;
+    }
+</style>
+
+<body>
+    <div class="tringle">
+
+    </div>
+    <div class="flex">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+    <div class="mask">
+
+    </div>
+</body>
+<script>
+    const mark = document.querySelector('.mask');
+    function addMark(el) {
+        const style = window.getComputedStyle(el);
+        const position = el.getBoundingClientRect();
+        // console.log(style, position);
+        const mark_el = document.createElement("div");
+        // mark_el.style = style;
+        mark_el.style.position = 'absolute';
+        mark_el.style.width = position.width;
+        mark_el.style.height = position.height;
+        // var marginLeft = parseFloat(style.marginLeft);
+        mark_el.style.left = position.left + 'px';
+        // var marginTop = parseFloat(style.marginTop);
+        mark_el.style.top = position.top + 'px';
+        mark_el.style.zIndex = 9999;
+        mark_el.style.opacity = '.5';
+        mark_el.style.backgroundColor = '#000';
+
+        el.parentNode.append(mark_el)
+
+    }
+    addMark(mark)
+    mark.addEventListener('click', function () {
+        console.log('click');
+    }, false);
+</script>
