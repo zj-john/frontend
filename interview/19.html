@@ -8,6 +8,11 @@
             return ++this.n
         }
     }
+    Object.defineProperty(window, 'a', {
+        get:function(){
+            return ++n;
+        }
+    })
     if(a==1 && a ==2 && a==3) { 
         console.log("ok")
     }

@@ -28,6 +28,15 @@
         "if(a==1 && a ==2 && a==3) { console.log(\"ok\")}",
         "科里化",
         "css",
-        "deepcopy"
+        "deepcopy",
+        "字符串中最长不重复子串的长度： abcabcedfae  abcedf",
+        "promise.all",
+        "数组中最长升序长度：[10,4,3,4,203,6,8] => [3,4,6,8]",
+        "节流、防抖",
+        "https",
+        "数组合并：let arr1 = ['A1', 'A2', 'B1', 'B2'] ; let arr2 = ['A', 'B'] => ['A1', 'A2', 'A', 'B1', 'B2', 'B'] ;"
+        "let obj = {2:3,3:4,length:2, push:Array.prototype.push} obj.push(1) obj.push(2) console.log(obj);",
+        "{1:22,2:33,5:88} => [22,33,null,null,88,null,null,null,null,null,null,null]",
+        "let nums1 = [1,2,2,1]; let nums = [2,3] => [2,2]"
     ]
 }
