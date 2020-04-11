@@ -1,0 +1,18 @@
+<script>
+  const obj = { 1: 22, 2: 33, 5: 88 };
+  
+//   let arr = new Array(12).fill(null);
+//   Object.keys(obj).forEach(k => {
+//       arr[k-1] = obj[k]
+//   })
+//   console.log(arr);
+
+    let arr = new Array(12).fill(null).map((i,index) => {
+        if(obj[index]) {
+            return obj[index];
+        } else {
+            return i
+        }        
+    }).slice(1)
+    console.log(arr);
+</script>

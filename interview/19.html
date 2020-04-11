@@ -2,15 +2,21 @@
     // let a = [1,2,3]
     // a.toString = a.shift;
 
-    let a = {
-        n:0,
-        toString() {
-            return ++this.n
-        }
-    }
+    // let a = {
+    //     n:0,
+    //     toString() {
+    //         return ++this.n
+    //     }
+    // }
+
+    
+    // let n = 0;
     Object.defineProperty(window, 'a', {
         get:function(){
-            return ++n;
+            if(typeof n == "undefined") {
+                this.n = 0;
+            }
+            return ++this.n;
         }
     })
     if(a==1 && a ==2 && a==3) { 

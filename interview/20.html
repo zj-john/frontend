@@ -1,16 +1,41 @@
 <script>
-    function add(...A) {
-        return function(...B) {
-            return function(...C) {
-                return eval([...A,...B,...C].join('+'))
+    // function add(...A) {
+    //     return function(...B) {
+    //         return function(...C) {
+    //             return eval([...A,...B,...C].join('+'))
+    //         }
+    //     }
+    // }
+
+    // console.log(add(1)(2)(3))
+
+    function carry(fn, len, ...args) {
+        if(len == 1) {
+            return fn(...args);
+        }
+        return carry(fn,--len, ...args)
+    }
+
+    function currying(fn, length) {
+        length = length || fn.length;
+        return function(...args) {
+            if(args.length >= length) {
+                return fn(...args);
             }
+            return currying(fn.bind(null, ...args), length-args.length)
         }
     }
 
+    function add() {
+        function _add() {
+            return eval(arguments.join('+'))
+        }
+        return currying(_add, 3)
+    }
     console.log(add(1)(2)(3))
 
-    add(1)(2)(3)
-    add(1)(2,3)
-    add(1,2,3)
-    add(1,2)(3)
+    // add(1)(2)(3)
+    // add(1)(2,3)
+    // add(1,2,3)
+    // add(1,2)(3)
 </script>
