@@ -1,0 +1,47 @@
+<body>
+  <button id="action">click</button>
+  <button id="cancel">取消防抖</button>
+</body>
+<script>
+  const action = document.querySelector("#action");
+  const cancel = document.querySelector("#cancel");
+  const onclick = function () {
+    console.log("click");
+  };
+  //   button.addEventListener("click", onclick);
+  let doSome = debounce(onclick, 2000, true);
+  action.addEventListener("click", () => doSome());
+  cancel.addEventListener("click", doSome.cancel());
+
+  //   防抖
+  // 事件响应函数在一段时间后执行，如果在这段时间内调用，则重新计算执行时间。将突发事件（如击键）分组为一个事件
+  // 1. scroll 事件滚动触发
+  // 2. 表单验证
+  // 3. 搜索框输入查询
+  // 4. 按钮提交事件
+  // 5. 窗口缩放，resize事件
+  function debounce(fn, wait, immediately) {
+    let timer = null;
+    let debounced = function () {
+      const context = this;
+      const argument = arguments;
+      if (timer) clearTimeout(timer);
+      if (immediately) {
+        var first = !timer;
+        timer = setTimeout(() => {
+          timer = null;
+        }, wait);
+        if (first) fn.call(context, ...argument);
+      } else {
+        timer = setTimeout(() => {
+          fn.call(context, ...argument);
+        }, wait);
+      }
+    };
+    debounced.cancel = function () {
+      clearTimeout(timer);
+      timer = null;
+    };
+    return debounced;
+  }
+</script>

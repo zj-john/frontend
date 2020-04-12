@@ -1,0 +1,35 @@
+<style>
+  body {
+    min-height: 4000px;
+  }
+  .container {
+      background-color: #021111;
+  }
+</style>
+<body>
+    <div class="container"></div>
+</body>
+<script>
+  const scroll = function () {
+    console.log("scroll");
+  };
+  window.addEventListener("scroll", throttle(scroll, 2000));
+//   节流
+// 原理：如果你持续触发事件，每隔一段时间，只执行一次事件
+// 应用场景
+// DOM元素的拖拽功能
+// 计算鼠标移动的距离
+// 监听scroll滚动事件
+  function throttle(fn, interval) {
+    let lastTime = 0;
+    return function () {
+      const context = this;
+      const argument = arguments;
+      const now = new Date().valueOf();
+      if (now - lastTime > interval) {
+        fn.call(context, ...argument);
+        lastTime = now;
+      }
+    };    
+  }
+</script>

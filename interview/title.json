@@ -104,8 +104,13 @@
         },
         {
             "id": 26,
-            "name": "节流、防抖"
-        },
+            "name": "节流、防抖",
+            "answer": [
+                "debounce(防抖)，throttle(节流)，都是为了减少出发频率，节约资源，优化体验。",
+                "1.防抖：限制时间内只执行最后一次。搜索框typeahead时，windows resize时。",
+                "2.节流：间隔一段时间执行一次。btn的点击，滚动条事件。"
+            ]
+        }
         {
             "id": 27,
             "name": "https"
@@ -126,6 +131,46 @@
         {
             "id": 31,
             "name": "let nums1 = [1,2,2,1]; let nums = [2,3] => [2,2]"
+        },
+        {
+            "id": 32,
+            "name": "缓存",
+            "answer": [
+                {
+                    "客户端缓存":[
+                        "内存的缓存：打开浏览器新页面时",
+                        "硬盘的缓存：新开浏览器时"
+                    ]
+                },
+                {
+                    "cache-control":{
+                        "desc":"控制谁在什么条件下可以缓存响应以及可以缓存多久",
+                        "value":{
+                            "max-age": [
+                                "从当前请求开始，允许获取的响应被重用的最长时间(单位为秒)",
+                                "在max-age指定的时间之内，浏览器不会向服务器发送任何请求，包括验证缓存是否有效的请求"
+                            ],
+                            "public和private":[
+                                "Cache-Control:public, max-age=60:可以在浏览器或者任何中继的Web代理中缓存（默认值）",
+                                "Cache-Control:private, max-age=60:只有用户的浏览器可以缓存private响应，不允许任何中继Web代理对其进行缓存"
+                            ],
+                            "no-cache": "Cache-Control:no-cache，那么浏览器在使用缓存的资源之前，必须先与服务器确认返回的响应是否被更改，如果资源未被更改，可以避免下载",
+                            "no-store": "Cache-Control:no-store，那么浏览器和任何中继的Web代理，都不会存储这次相应的数据。当下次请求该资源时，浏览器只能重新请求服务器，重新从服务器读取资源。等同于Cache-Control:max-age=0"
+                    
+                        }
+                    }
+                },
+                "Last-Modified：秒级，上下游时间不一致 -> 需要ETag一起使用；与ETag是可以一起使用的，服务器会优先验证ETag，一致的情况下，才会继续比对Last-Modified，最后才决定是否返回304",
+                "ETag:ETag可以是资源的hash值，也可以是一个内部维护的版本号。但不管怎样，ETag应该能反映出资源内容的变化，这是Http缓存可以正常工作的基础。",
+                {
+                    "请求过程":[
+                        "是否存在资源副本: 否，直接请求源站",
+                        "根据cache-control进行文档过期验证：否，直接使用缓存资源",
+                        "向服务器请求资源，请求头发送if-modified-since（Last-Modified）或者if-none-match（ETag），进行服务端验证",
+                        "资源未修改：返回304. 否则 Http200"
+                    ]
+                }
+            ]
         }
     ]
 }

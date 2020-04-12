@@ -1,98 +1,97 @@
 <style>
-    /* div {
+  /* div {
         display: grid;
         grid-template-columns: 1lr 1lr 1lr;
         grid-template-rows:repeat(3);
     } */
 </style>
 <body>
-    <div class="root">
-        <div class="container">
-            <section class="sidebar">
-                <ul class="menu"></ul>
-            </section>
-            <section class="main">
-                <article class="post"></article>
-                <p class="copyright"></p>
-            </section>
-        </div>
+  <div class="root">
+    <div class="container">
+      <section class="sidebar">
+        <ul class="menu"></ul>
+      </section>
+      <section class="main">
+        <article class="post"></article>
+        <p class="copyright"></p>
+      </section>
     </div>
+  </div>
 </body>
 <script>
 
-    class Tree {
-        constructor(el) {
-            this.$el = this.isElement(el) ? el : document.querySelector(el);
-            if (!this.$el) {
-                throw new Error('dom not exist')
-            }
-            this.treeArr = [];
-        }
-        get tree() {
-            this.makeOtherTree(this.$el);
-            return this.treeArr
-        }
-        isElement(node) {
-            return node.nodeType == 1 ? true : false;
-        }
-        makeTreeObj(node) {
-            let res = {};
-            if (node.children.length == 0) {
-                return node;
-            } else {
-                [...node.children].forEach((item) => {
-                    const key = item.nodeName + '.' + item.className
-                    res[key] = this.makeTree(item)
-                })
-            }
-            return res;
-        }
+  class Tree {
+      constructor(el) {
+          this.$el = this.isElement(el) ? el : document.querySelector(el);
+          if (!this.$el) {
+              throw new Error('dom not exist')
+          }
+          this.treeArr = [];
+      }
+      get tree() {
+          this.makeOtherTree(this.$el);
+          return this.treeArr
+      }
+      isElement(node) {
+          return node.nodeType == 1 ? true : false;
+      }
+      makeTreeObj(node) {
+          let res = {};
+          if (node.children.length == 0) {
+              return node;
+          } else {
+              [...node.children].forEach((item) => {
+                  const key = item.nodeName + '.' + item.className
+                  res[key] = this.makeTreeObj(item)
+              })
+          }
+          return res;
+      }
 
-        makeTreeArr(node) {
-            this.treeArr.push(node.nodeName + '.' + node.className)
-            if (node.children.length == 0) {
-                return;
-                // return node.nodeName + '.' + node.className;
-            } else {
-                [...node.children].forEach((item) => {
-                    // const key = item.nodeName + '.' + item.className
-                    const _child = this.makeTreeArr(item);
-                    if (_child) {
-                        this.treeArr.push(_child)
-                    }
+      makeTreeArr(node) {
+          this.treeArr.push(node.nodeName + '.' + node.className)
+          if (node.children.length == 0) {
+              return;
+              // return node.nodeName + '.' + node.className;
+          } else {
+              [...node.children].forEach((item) => {
+                  // const key = item.nodeName + '.' + item.className
+                  const _child = this.makeTreeArr(item);
+                  if (_child) {
+                      this.treeArr.push(_child)
+                  }
 
-                })
-            }
-        }
+              })
+          }
+      }
 
-        makeOtherTree(node) {
-            const traverse = (ndRoot) => {
-                const queue = [ndRoot];
-                while (queue.length) {
-                    const node = queue.shift();
-                    printInfo(node);
+      makeOtherTree(node) {
+          const traverse = (ndRoot) => {
+              const queue = [ndRoot];
+              while (queue.length) {
+                  const node = queue.shift();
+                  printInfo(node);
 
-                    if (!node.children.length) {
-                        continue;
-                    }
+                  if (!node.children.length) {
+                      continue;
+                  }
 
-                    Array.from(node.children).forEach(x => queue.push(x));
-                }
-            };
+                  Array.from(node.children).forEach(x => queue.push(x));
+              }
+          };
 
-            const printInfo = (node) => {
-                console.log(node.tagName, `.${node.className}`);
-            };
+          const printInfo = (node) => {
+              console.log(node.tagName, `.${node.className}`);
+          };
 
-            // kickoff
-            traverse(node);
+          // kickoff
+          traverse(node);
 
-        }
-    }
+      }
+  }
 
-    let body = document.querySelector('.root');
-    let tree = new Tree(body);
-    console.dir(tree.tree)
-
+  let body = document.querySelector('.root');
+  let tree = new Tree(body);
+  console.dir(tree.tree)
 
 </script>

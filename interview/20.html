@@ -1,41 +1,58 @@
 <script>
-    // function add(...A) {
-    //     return function(...B) {
-    //         return function(...C) {
-    //             return eval([...A,...B,...C].join('+'))
-    //         }
-    //     }
-    // }
+  // function add(...A) {
+  //     return function(...B) {
+  //         return function(...C) {
+  //             return eval([...A,...B,...C].join('+'))
+  //         }
+  //     }
+  // }
 
-    // console.log(add(1)(2)(3))
+  // console.log(add(1)(2)(3))
 
-    function carry(fn, len, ...args) {
-        if(len == 1) {
-            return fn(...args);
-        }
-        return carry(fn,--len, ...args)
-    }
+  function curry(fn, len) {
+    return function (...args) {
+      // 应对 add(1)(2, 3)
+      if (args.length >= len) {
+        return fn(...args);
+      }
+      return curry(fn.bind(null, ...args), len - args.length);
+    };
+  }
+  function _add() {
+    return eval([...arguments].join("+"));
+  }
+  // 不能套函数
+  add = curry(_add, 3);
 
-    function currying(fn, length) {
-        length = length || fn.length;
-        return function(...args) {
-            if(args.length >= length) {
-                return fn(...args);
-            }
-            return currying(fn.bind(null, ...args), length-args.length)
-        }
-    }
+  //   function currying(fn, length) {
+  //     length = length || fn.length;
+  //     return function (...args) {
+  //       if (args.length >= length) {
+  //         return fn(...args);
+  //       }
+  //       return currying(fn.bind(null, ...args), length - args.length);
+  //     };
+  //   }
 
-    function add() {
-        function _add() {
-            return eval(arguments.join('+'))
-        }
-        return currying(_add, 3)
-    }
-    console.log(add(1)(2)(3))
+  //   function add1(n1, n2, n3) {
+  //     return n1 + n2 + n3;
+  //   }
 
-    // add(1)(2)(3)
-    // add(1)(2,3)
-    // add(1,2,3)
-    // add(1,2)(3)
+  //   add = currying(add1, 3);
+
+  console.log(add(1)(2)(3));
+  console.log(add(1)(2, 3));
+  console.log(add(1, 2, 3));
+  console.log(add(1, 2)(3));
+
+  // 取巧的方法，console.log一个function，是调用function的toString方法
+  // function add(a) {
+  //     function s(b) {
+  //         a = a + b;
+  //         return s;
+  //     }
+  //     s.toString = function() {return a;}
+  //     return s;
+  // }
+  // console.log(add(1)(2)(3)(4));
 </script>
