@@ -1,0 +1,25 @@
+<script>
+  const str = "abcabcedfae";
+  function maxSubStr(s) {
+    let i = 0;
+    // let max = 0;
+    let max = [];
+    while (i < s.length) {
+      j = i + 1;
+      let str = s[i];
+      while (j < s.length) {
+        if (str.includes(s[j]) || j == s.length-1) {
+          max.push(str.length);
+          //   max = max < str.length?str.length:max;
+          j = s.length;
+        } else {
+          str = str + s[j];
+        }
+        j++;
+      }
+      i++;
+    }
+    console.log(max);
+  }
+  maxSubStr(str);
+</script>
