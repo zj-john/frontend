@@ -41,4 +41,4 @@ app.use(async (ctx, next)=>{
     console.log(6);
 })
 
-app.listen(3000);
+app.listen(3002);

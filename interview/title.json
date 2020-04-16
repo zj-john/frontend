@@ -171,6 +171,41 @@
                     ]
                 }
             ]
+        },
+        {
+            "id":32,
+            "name": "CSP(Content Secure Policy)",
+            "answer": {
+                "name":"网页安全政策，防止 XSS（Cross Site Scripting） 攻击",
+                "methods":[
+                    "通过 HTTP 头信息的Content-Security-Policy的字段",
+                    "网页的<meta>标签"
+                ],
+                "old":"X-XSS-Protection: 1; mode=block.对尚不支持 CSP 的旧版浏览器的用户提供保护"
+            }
+        },
+        {
+            "id":33,
+            "name": "Cross-site request forgery(CSRF 或者 XSRF)",
+            "answer":[
+                "跨站请求伪造",
+                "简单的身份验证只能保证请求发自某个用户的浏览器，却不能保证请求本身是用户自愿发出的",
+                {
+                    "防御措施":[
+                        "令牌同步模式(STP)当用户发送请求时，服务器端应用将令牌（英语：token，一个保密且唯一的值）嵌入HTML表格，并发送给客户端。客户端提交HTML表格时候，会将令牌发送到服务端，令牌的验证是由服务端实行的。令牌可以通过任何方式生成，只要确保随机性和唯一性",
+                        "检查Referer字段",
+                        "添加校验token"
+                    ]
+                }
+            ]
+        },
+        {
+            "id":34,
+            "name": "NODE应用调试"
+        },
+        {
+            "id":35,
+            "name": "中断一个发送中的请求"
         }
     ]
 }

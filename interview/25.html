@@ -1,0 +1,42 @@
+<script>
+    const arr = [10, 4, 3, 4, 203, 6, 8];  // 3,4,6,8
+    function findMaxSub(arr) {
+        if (arr.length == 0) return 0;
+        // let dp = new Array(arr.length).fill(0);
+        // dp 第i个元素包含的字串长度
+        let dp = Array.from({ length: arr.length }, () => 0);
+        let LIS = 1;
+        for (let i = 0; i < dp.length; i++) {
+            dp[i] = 1;
+            for (let j = 0; j < i; j++) {
+                if (arr[i] > arr[j] && dp[i] < dp[j] + 1) {
+                    dp[i] = dp[j] + 1;
+                }
+            }
+            if (LIS < dp[i]) {
+                LIS = dp[i]
+            }
+        }
+        return LIS;
+    }
+    console.log(findMaxSub(arr));
+
+    const coins = [1, 2, 5, 7, 10]
+    const amount = 19;
+    function coinChange(coins, amount) {
+        // dp[i]: i元钱需要的个数
+        let dp = Array.from({ length: amount + 1 }, () => -1);
+        dp[0] = 0;
+        for (let i = 0; i <= amount; i++) {
+            for (let j = 0; j < coins.length; j++) {
+                if (i - coins[j] >= 0 && dp[i - coins[j]] != -1) {
+                    if (dp[i] == -1 || dp[i] > dp[i - coins[j]] + 1) {
+                        dp[i] = dp[i - coins[j]] + 1;
+                    }
+                }
+            }
+        }
+        return dp[amount];
+    }
+    console.log(coinChange(coins, amount));
+</script>

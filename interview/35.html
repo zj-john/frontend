@@ -1,0 +1,86 @@
+<body>
+    <button id="send">发送XHR</button>
+    <button id="abort">中止XHR</button>
+    <hr>
+    <button id="send_fetch">发送Fetch</button>
+    <button id="abort_fetch">中止Fetch</button>
+</body>
+<script>
+    // let request;
+    // function send() {
+    //     const request = new XMLHttpRequest();
+    //     const url = "http://yapi.ops.ctripcorp.com/mock/8/api/getPrincipal";
+    //     request.open("GET", url);
+    //     request.send();
+    //     request.onload = function (e) {
+    //         console.log("onload:", e);
+    //     }
+    //     request.onerror = function (e) {
+    //         console.log("onerror:", e);
+    //     }
+    //     return request;
+    // }
+    // const sendBtn = document.getElementById("send");
+    // const abortBtn = document.getElementById("abort");
+    // sendBtn.onclick = function () {
+    //     request = send();
+    // }
+    // abortBtn.onclick = function () {
+    //     request.abort();
+    // }
+
+    class Ajax {
+        constructor() {
+            this.request;
+        }
+        xhr() {
+            const request = new XMLHttpRequest();
+            const url = "http://yapi.ops.ctripcorp.com/mock/8/api/getPrincipal";
+            request.open("GET", url);
+            request.send();
+            request.onload = function (e) {
+                console.log("onload:", e);
+            }
+            request.onerror = function (e) {
+                console.log("onerror:", e);
+            }
+            this.request = request
+        }
+        fetch() {
+            const url = "http://yapi.ops.ctripcorp.com/mock/8/api/getPrincipal";
+            let controller = new AbortController();
+            fetch(url, {
+                signal: controller.signal
+            }).then((data)=>{
+                console.log("onload:", data);
+            }, (e)=>{
+                 console.log("onerror:", e);
+            });
+            this.request = controller
+        }
+        abortXhr() {
+            this.request.abort();
+        }
+        abortFetch() {
+            this.request.abort();
+        }
+    }
+
+    const ajax = new Ajax();
+    const sendBtn = document.getElementById("send");
+    const abortBtn = document.getElementById("abort");
+    const sendFetchBtn = document.getElementById("send_fetch");
+    const abortFetchBtn = document.getElementById("abort_fetch");
+    sendBtn.onclick = function () {
+        ajax.xhr();
+    }
+    abortBtn.onclick = function () {
+        ajax.abortXhr();
+    }
+    sendFetchBtn.onclick = function () {
+        ajax.fetch();
+    }
+    abortFetchBtn.onclick = function () {
+        ajax.abortFetch();
+    }
+</script>
