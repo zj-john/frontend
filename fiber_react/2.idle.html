@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Idle</title>
+</head>
+<body>
+    <script>
+        // 通知浏览器可以在空闲的时候执行callback，但是到了超时时间就必须要执行。
+        // window.requestIdleCallback(cb, {timeout:1000});
+        function sleep(delay) {
+            for(var start = Date.now(); Date.now() - start < delay;){}
+        }
+        const works = [
+            // 最小执行单元就是一个任务
+            ()=>{
+                console.log("第1个任务执行");
+                sleep(20);
+                console.log("第1个任务结束");
+            },
+            ()=>{
+                console.log("第2个任务执行");
+                sleep(20);
+                console.log("第2个任务结束");
+            },
+            ()=>{
+                console.log("第3个任务执行");
+                sleep(20);
+                console.log("第3个任务结束");
+                console.log("全部执行的时间是：", Date.now() - allStart);
+            }
+        ]
+        // deadline是一个对象，有2个属性
+        // timeRemaining() 返回此帧还剩下多少时间供用户使用
+        // didTimeout 此callback是否超时
+        function workloop(deadline) {
+            console.log("本帧剩余时间：",deadline.timeRemaining());
+            // 有时间或未超时，就执行
+            while((deadline.timeRemaining() > 0 || deadline.didTimeout) && works.length > 0) {
+                performUnitWork();
+            }
+            
+            if(works.length>0) {
+                window.requestIdleCallback(workloop,{timeout:1000})
+            }
+        }
+        function performUnitWork() {
+            works.shift()();
+        }
+        // 全局属性 只有chrome有
+        // 可以在空闲的时候执行cb，优先级比较低。
+        // 如果超过了超时时间，就必须马上执行
+        const allStart = Date.now()
+        window.requestIdleCallback(workloop, {timeout:1000});
+    </script>
+</body>
+</html>

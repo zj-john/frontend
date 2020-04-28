@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>计算requestAnimationRequest的时间范围</title>
+</head>
+<body>
+    <div id="process-bar" style="background-color: lightblue;width: 0;height: 20px;"></div>
+    <button id="btn">开始</button>
+    <script>
+        let btn = document.getElementById('btn');
+        let div = document.getElementById('process-bar');
+        let start;
+        function process() {
+            div.style.width = div.offsetWidth + 1 + 'px';
+            div.innerHTML = (div.offsetWidth) + '%';
+            if(div.offsetWidth  < 100) {
+                let current = Date.now();
+                // 一个帧 16.6ms
+                // 开始准备执行的时间到真正执行时间的时间差
+                console.log(current - start);
+                start = current;
+                requestAnimationFrame(process);
+            }
+        }
+        btn.addEventListener('click', ()=>{
+            div.style.width = 0;
+            let current = Date.now();
+            start = current;
+            requestAnimationFrame(process);
+        })
+    </script>
+</body>
+</html>
