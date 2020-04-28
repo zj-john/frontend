@@ -86,3 +86,6 @@ requestAnimationFrame回调函数会在绘制之前执行
 
 ## render阶段
 - 会构建fiber树
+
+
+> vue不需要fiber，是因为vue是组件级更新，diff足够小。react的diff都是从root节点开始比较，但是可以把大任务分割为小任务，可以中断和恢复，不阻塞主进程。
