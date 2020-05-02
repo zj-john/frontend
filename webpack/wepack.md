@@ -259,13 +259,255 @@ new MiniCssExtractPlugin2({
 
 - css-loader：处理css语法，比如 @import 的语法
 - style-loader: 把 css 插入到 head 标签中
-- less-loader: less-> css
+- less & less-loader: less-> css
 - node-sass & sass-loader : 处理 sass
-- stylus-loader: 处理 stylus
+- stylus & stylus-loader: 处理 stylus
 
-> 默认 css 打包在 js 中，不会抽离成单独的 css 文件。
+> 默认 css 打包在 js 中，不会抽离成单独的 css 文件。如果需要分离，可以使用mini-css-extract-plugin插件
 
 - postcss-loader: 结合autoprefixer 自动添加前缀
+> 可以结合package.json中的browserslist一起使用。
+```js
+"browserslist": [
+  "last 10 Chrome versions",
+  "last 5 Firefox versions",
+  "Safari >= 6",
+  "ie > 8"
+]
+  ```
+
+## JS
+- @babel/core & babel-loader: 将高版本ES语法转化为ES5，可以搭配不同的转换器
+  - @babel/preset-env : 当前官方es6语法
+  - @babel/plugin-proposal-class-properties: class语法
+  - @babel/plugin-proposal-decorators: 装饰器
+  - @babel/runtime & @babel/plugin-transform-runtime： 运行时转换
+  - @babel/polyfill: 一些高级语法的polyfill实现 安装在dependency中,需要的文件中要引入：require('@babel/polyfill')
+
+> 默认babel只会对构建时的语法进行转化，不会对运行时的语法进行转化，比如实例属性，promise、generator这些api。如果用到这些语法，会产生报错：Uncaught ReferenceError: regeneratorRuntime is not defined。此时需要安装@babel/plugin-transform-runtime和@babel/runtime. @babel/plugin-transform-runtime安装在devDependency中，其构建的包，需要在运行时使用@babel/runtime执行，所以对应的，需要安装@babel/runtime到dependency中。
+
+## 图片
+1. 在js中创建图片来引入
+```js
+import animal from './animal.jpg'
+console.log(animal); // animal是对图片的一个新的引用，而不是图片本身
+let image = new Image();
+// image.src = './animal.jpg'; // 不能直接写相对路径，打包后这个文件并不会copy过去，路径将失效
+image.src = animal; // import的方式 ,使用file-loader解析，file-loader默认会在内部生成一张图片到build目录下，然后把生成的图片名字返回回来
+document.body.appendChild(image);
+```
+
+适配loader
+- file-loader
+- url-loader : 可以处理文件，还可以把img转换为base64代码，减少http请求
+
+2. 在css中引入 background('url')
+```
+background: url('./animal.jpg'); // 使用css-loader就可以解析 等价于background: url(require('./animal.jpg'));
+
+```
+
+3. \<img src='./xxx.jpg' \/\>
+使用html-withimg-loader来处理html
+```js
+<img src='./animal.jpg' alt=""/>
+{
+  test: /\.html$/,
+  use: "html-withimg-loader",
+}
+```
+
+此时如果遇到，图片展示不出来，显示的图片src为{default:'xxxxxxxxxx.jpg'}
+
+原因是：file-loader升级以后，esModule参数默认为true,与html-withimg-loader有冲突，改为false就可以了
+
+```js
+{
+  test: /.(jpg|png|gif)$/,
+  use: {
+    loader: "file-loader",
+    options: {
+      esModule: false,
+    },
+  },
+}
+```
+
+4. url-loader 把图片变为base64编码
+变为base64会比原图片大1/3，但是减少了http请求，可以自己评估
+```js
+{
+  test: /.(jpg|png|gif)$/,
+  use: {
+    loader: 'url-loader', // 更常用
+    options: {
+      limit: 200*1024, //小于200k时，用base64转化，超过则显示为图片。limit：1，1字节，来显示所有图片
+      esModule: false,
+    },
+  },
+},
+```
+
+# 优化
+
+## css和Js压缩
+默认production模式下，js会被压缩优化。但是单独打包的css文件不会被压缩。
+
+如果需要压缩，可以在webpack.config.js中添加optimization属性，来自己定义优化项。
+> 注意，optimization会默认覆盖原先的优化选项，比如js压缩。所以，在optimization中同样需呀对js指定压缩选项。
+
+> develpment模式下 不会进行optimization的处理
+
+```js
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+
+optimization: {
+  minimizer: [
+    new UglifyJsPlugin({
+      cache: true,
+      parallel: true,
+      sourceMap: true
+    }),
+    new OptimizeCSSAssetsPlugin({})
+  ]
+}
+```
+
+>UglifyJsPlugin 只支持ES5，所以需要babel。
+>默认webpack是不对es6语法做处理的，直接原样打包
+
+## eslint检查
+- eslint & esint-loader
+- 默认配置文件：.eslintrc.json（以.开头） 
+
+## 打包文件文类
+
+### 不同类型的文件放到不同目录中
+
+```js
+// 文件
+{
+  test: /.(jpg|png|gif)$/,
+  use: {
+    // loader: "file-loader",
+    loader: 'url-loader', // 更常用
+    options: {
+      limit: 200*1024, //小于200k时，用base64转化
+      esModule: false,
+      outputPath: './img/'
+    },
+  },
+}
+
+new MiniCssExtractPlugin({
+  filename: "./css/main.css",
+}),
+```
+
+### 添加cdn前缀
+
+使用publicPath属性
+全局
+```js
+output: {
+  filename: "bundle.[hash:8].js", // 打包后的文件名，加入hash [hash:8]指定8位hash，默认20位
+  path: path.resolve(__dirname, "build"), // 打包后存放的路径，必须是一个绝对路径，所以用resolve来生成
+  publicPath: 'http://cdn.xxx.com'
+}
+```
+
+部分
+```js
+{
+  test: /.(jpg|png|gif)$/,
+  use: {
+    loader: 'url-loader',
+    options: {
+      limit: 200*1024,
+      esModule: false,
+      outputPath: '/img',
+      publicPath: 'http://cdn.xxx.com'
+    },
+  },
+}
+```
+
+# 问题
+
+## commonjs和es6 混用
+```js
+//a.js
+var str = "hello a";
+
+// 为了支持generator，引入了@babel/plugin-transform-runtime 插件
+function * gen(){
+    yield 1;
+}
+console.log(gen().next());
+
+module.exports = str;
+```
+index.js引用了a.js,打包时报错：
+```js
+a.js:27 Uncaught TypeError: Cannot assign to read only property 'exports' of object '#<Object>'
+```
+
+原因如下：
+- import和module.exports的混用。混用这两个语法的时候，webpack就会报这个错。（可以使用babel的commonJS模式帮你把import编译成require）
+- 使用了@babel/plugin-transform-runtime这个插件。某个commonJS写的文件里使用这个插件时，babel会默认你这个文件是ES6的文件，然后就使用import导入了这个插件，从而产生了上述的混用错误。解决方法是在babel.config.js里配置unambiguous设置，让babel和webpack一样严格区分commonJS文件和ES6文件。
+
+解决：  
+引入babel后，可以在整个代码中都使用ES6的语法，保持统一
+
+# 第三方模块
+
+引入的第三方模块，在webpack打包时是放到匿名函数中的，所以原先的window.$就没有注册，变为undefined
+```js
+import $ from 'jquery';
+console.log($); // jquery
+console.log(window.$); // undefined
+``` 
+
+## 怎么暴露给window
+1. expose-loader : 暴露全局的loader（暴露到window上），本身也是一个内联loader（放到js文件中使用的loader）,安装到dependency
+
+```js
+import $ from 'expose-loader?$!jquery';
+```
+
+2. webpack
+```js
+import $ from 'jquery';
+// webpack.config.js loader
+{
+  test: require.resolve('jquery'),
+  use:'expose-loader?$!jquery'
+},
+```
+3. 在每个模块中注入$
+```js
+// webpack.config.js plugins
+new webpack.ProvidePlugin({
+  $:'jquery'
+})
+
+// import $ from 'jquery'; //不需要引入了
+console.log(window.$);  // undefined
+```
+
+4. 如果jquery是在html中script中通过cdn地址引入的
+
+推荐使用这种方式。这种情况下，不需要打包到bundle.js中，可以大大减小包的体积。
+
+不能再使用import $ from 'jquery';的引入，如果有的文件引入了，可以使用以下方式进行全局忽略
+```js
+// webpack.config.js
+externals: { // 这里是外部引入的js，不需要打包
+  'jquery':'$'
+},
+```
+
 
 # webpack 打包后的文件解析
 
