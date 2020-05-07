@@ -205,7 +205,15 @@
         },
         {
             "id":35,
-            "name": "中断一个发送中的请求"
+            "name": "中断一个发送中的请求(xhr/fetch)"
+        },
+        {
+            "id":36,
+            "name": "axios: node->http; brower->xhr"
+        },
+        {
+            "id":37,
+            "name": "光照效果"
         }
     ]
 }
