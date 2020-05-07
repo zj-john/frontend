@@ -257,8 +257,8 @@ new MiniCssExtractPlugin2({
 
 ## css
 
-- css-loader：处理css语法，比如 @import 的语法
-- style-loader: 把 css 插入到 head 标签中
+- css-loader：translates CSS into CommonJS
+- style-loader: creates style nodes from JS strings
 - less & less-loader: less-> css
 - node-sass & sass-loader : 处理 sass
 - stylus & stylus-loader: 处理 stylus
