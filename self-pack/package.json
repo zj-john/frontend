@@ -1,0 +1,15 @@
+{
+  "name": "self-pack",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "bin": {
+    "pack": "./bin/self-pack.js"
+  },
+  "dependencies": {
+    "@babel/generator": "^7.9.6",
+    "@babel/traverse": "^7.9.6",
+    "@babel/types": "^7.9.6",
+    "babylon": "^6.18.0"
+  }
+}

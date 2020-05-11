@@ -1,12 +1,14 @@
-class AsyncParallelHook {
+class SyncHook {
     constructor(args) {
         this.tasks = [];
 
     }
-    tapAsync(name, task) {
+    tap(name, task) {
         this.tasks.push(task);
     }
-    asyncParallelHook(...args) {
+    // call方法用下述方法替代了，为了书写方便
+    call(...args) {}
+    syncHook(...args) {
         this.tasks.forEach(task => {
             // task.call(null,...args);
             task(...args);
@@ -44,8 +46,9 @@ let hook = new SyncHook(['name']);
 let i = 0;
 hook.tap('node', function (name) {
     console.log('node', name);
-    // return i++ == 3?undefined:i    
-    return undefined
+    // i++;
+    return i++ == 3?undefined:i    
+    // return undefined
 })
 hook.tap('react', function (name) {
     console.log('react', name);
@@ -56,9 +59,9 @@ hook.tap('vue', function (name) {
 })
 console.log('------- syncHook ---------')
 hook.syncHook('john2')
-// console.log('------- syncBailHook ---------')
-// hook.syncBailHook('john2')
-// console.log('------- syncWaterfallHook ---------')
-// hook.syncWaterfallHook('john2')
-// console.log('------- syncLoopHook ---------')
-// hook.syncLoopHook('john2')
+console.log('------- syncBailHook ---------')
+hook.syncBailHook('john2')
+console.log('------- syncWaterfallHook ---------')
+hook.syncWaterfallHook('john2')
+console.log('------- syncLoopHook ---------')
+hook.syncLoopHook('john2')
