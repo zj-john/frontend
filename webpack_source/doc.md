@@ -73,4 +73,32 @@ module.exports = loader;
 ```
 
 ## style-loader
->css文件有空行、空格分隔，可以用JSON.stringify来控制成为一行
+>css文件有空行、空格分隔，可以用JSON.stringify来控制成为一行。
+
+```js
+function loader(source) {
+    let style=`
+        let style = document.createElement('style');
+        style.innerHTML = ${JSON.stringify(source)}
+        document.head.appendChild(style);
+    `
+    return style;
+}
+module.exports = loader;
+```
+
+## less-loader
+>css中有空行\n，需要replace为\\n
+```js
+let less = require('less');
+function loader(source) {
+    let css = '';
+    less.render(source,function(err,c){
+       css = c.css;
+       css = css.replace(/\n/g,'\\n')
+    });
+    return css;
+}
+
+module.exports = loader
+```

@@ -81,9 +81,9 @@ class Compiler{
         // 拿到模块的内容 
         let source = this.getSource(modulePath);
         // 模块id : modulePath - this.root
-        let moduleName = path.relative(this.root,modulePath); // 根据相对路径差获取name
+        let moduleName = './' + path.relative(this.root,modulePath); // 根据相对路径差获取name
         // console.log("source",source);
-        // console.log("moduleName", moduleName);
+        console.log("moduleName", moduleName);
         /**
          * 需要把./a.js 替换为 ./src/a.js;需要把require替换为自己的require函数
          * source let a = require('./a.js')
@@ -98,6 +98,7 @@ class Compiler{
         // 把相对路径和模块中的内容对应起来
         this.modules[moduleName] = sourceCode;
         // console.log(source, dependencies);
+        // console.log(sourceCode);
 
         dependencies.forEach(dep => { // 附模块的递归加载
             this.buildModule(path.join(this.root, dep), false);
@@ -109,11 +110,11 @@ class Compiler{
         let main = path.join(this.config.output.path, this.config.output.filename)
         // ejs
         let templateStr = this.getSource(path.join(__dirname, 'main.ejs'));
-        console.log(templateStr);
+        // console.log(templateStr);
         let code = ejs.render(templateStr, {entryId:this.entryId, modules: this.modules});
         this.assets = {};
         this.assets[main] = code;
-        console.log(main, code);
+        // console.log(main, code);
         fs.writeFileSync(main,this.assets[main])
     }
 

@@ -21,11 +21,11 @@
       return module.exports; 
     }
     // Load entry module and return exports
-    return __webpack_require__(__webpack_require__.s = "src\index.js");
+    return __webpack_require__(__webpack_require__.s = "./src\index.js");
   })
     ({
     
-      "src\index.js":
+      "./src\index.js":
         (function (module, exports, __webpack_require__) {
           eval(`let a = __webpack_require__("./src\\a.js");
 
@@ -34,22 +34,22 @@ __webpack_require__("./src\\index.less");
 console.log(a);`);
         }),
         
-      "src\a.js":
+      "./src\a.js":
         (function (module, exports, __webpack_require__) {
           eval(`let b = __webpack_require__("./src\\base\\b.js");
 
 module.exports = 'a' + b;`);
         }),
         
-      "src\base\b.js":
+      "./src\base\b.js":
         (function (module, exports, __webpack_require__) {
           eval(`module.exports = 'b';`);
         }),
         
-      "src\index.less":
+      "./src\index.less":
         (function (module, exports, __webpack_require__) {
           eval(`let style = document.createElement('style');
-style.innerHTML = "body {\n  background-color: red;\n}\nbody div {\n  width: 100px;\n  height: 100px;\n  background-color: yellowgreen;\n}\n";
+style.innerHTML = "body {\\n  background-color: red;\\n}\\nbody div {\\n  width: 100px;\\n  height: 100px;\\n  background-color: yellowgreen;\\n}\\n";
 document.head.appendChild(style);`);
         }),
           
