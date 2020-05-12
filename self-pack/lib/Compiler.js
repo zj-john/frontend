@@ -25,6 +25,26 @@ class Compiler{
     }
     getSource(modulePath) {
         let content = fs.readFileSync(modulePath,'utf8');
+        // 匹配loader
+        let rules = this.config.module.rules;
+        for(let i=0; i < rules.length; i++) {
+            let rule = rules[i];
+            let { test, use } = rule;
+            let len = use.length - 1;
+            // 这里的执行结果最终会别转换为ast，所以最后一定要处理为js代码，否则ast转化时报错
+            if(test.test(modulePath)) {
+                function normalLoader() {
+                    // console.log(len);
+                    // 从最后一个loader开始执行，自下向上
+                    let loader = require(use[len--]);
+                    content = loader(content);
+                    if(len>=0) {
+                        normalLoader();
+                    }
+                }
+                normalLoader();                
+            }
+        }
         return content;
     }
     // 解析源码
@@ -34,7 +54,7 @@ class Compiler{
         // astexplorer.net
         let ast = babylon.parse(source);
         // console.log("ast", ast);
-        let dependencies = []
+        let dependencies = [];
         // require(./a.js) 匹配require 匹配./a.js 然后替换
         traverse(ast, {
             CallExpression(p) {  // 调用表达式 a() require()
@@ -53,6 +73,7 @@ class Compiler{
             }
         });
         let sourceCode = generator(ast).code;
+        // console.log(sourceCode);
         return {sourceCode, dependencies}
 
     }
@@ -87,17 +108,19 @@ class Compiler{
         // 获取输出目录
         let main = path.join(this.config.output.path, this.config.output.filename)
         // ejs
-        let templateStr = this.getSource(main);
+        let templateStr = this.getSource(path.join(__dirname, 'main.ejs'));
+        console.log(templateStr);
         let code = ejs.render(templateStr, {entryId:this.entryId, modules: this.modules});
         this.assets = {};
         this.assets[main] = code;
+        console.log(main, code);
         fs.writeFileSync(main,this.assets[main])
     }
 
     run() {
         // 创建模块的依赖关系
         this.buildModule(path.resolve(this.root, this.entry), true);
-        console.log(this.modules, this.entryId);
+        // console.log(this.modules, this.entryId);
         // 发射一个文件，打包后的文件
         this.emitFile();
     }

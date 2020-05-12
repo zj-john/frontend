@@ -60,3 +60,17 @@ npm link // 把包链接到全局
 ```
 
 在需要的项目录下 npm link self-pack 链接上，然后npx pack 就可以得到结果
+
+
+# loader
+loader就是一个函数，输入是对应类型的源码，比如js文件、css文件，然后再导出
+```js
+function loader(source) {
+
+}
+
+module.exports = loader;
+```
+
+## style-loader
+>css文件有空行、空格分隔，可以用JSON.stringify来控制成为一行
