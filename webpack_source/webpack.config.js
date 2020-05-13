@@ -1,4 +1,15 @@
 const path = require('path');
+class P {
+    constructor() {
+        console.log('p')
+    }
+    apply(compiler) {
+        compiler.hooks.emit.tap('emit',function(){
+            console.log('emit');
+        })
+    }
+}
+
 module.exports = {
     mode: 'development',
     entry: './src/index.js',
@@ -16,5 +27,8 @@ module.exports = {
                 ]
             }
         ]
-    }
+    },
+    plugins:[
+        new P()
+    ]
 }

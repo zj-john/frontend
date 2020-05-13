@@ -4,7 +4,8 @@ let babylon = require('babylon');
 let traverse = require('@babel/traverse').default;
 let t = require('@babel/types');
 let generator = require('@babel/generator').default;
-let ejs = require('ejs')
+let ejs = require('ejs');
+let { SyncHook } = require('tapable')
 
 // 需要用到的模块
 // babylon 把源码转换为ast
@@ -22,6 +23,22 @@ class Compiler{
         this.modules = {};
         this.entry = config.entry; //入口路径
         this.root = process.cwd(); // 工作路径，运行npx的路径
+        // 定义各个周期的hook
+        this.hooks = {
+            entryOptions: new SyncHook(),
+            compiler: new SyncHook(),
+            afterCompiler: new SyncHook(),
+            afterPlugins: new SyncHook(),
+            run: new SyncHook(),
+            emit: new SyncHook(),
+            done: new SyncHook()
+        };
+        let plugins = this.config.plugins;
+        if(Array.isArray(plugins)) {
+            plugins.forEach(plugin => {
+                plugin.apply(this);
+            })
+        }
     }
     getSource(modulePath) {
         let content = fs.readFileSync(modulePath,'utf8');
