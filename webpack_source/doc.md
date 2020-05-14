@@ -72,6 +72,116 @@ function loader(source) {
 module.exports = loader;
 ```
 
+## 找到loader的几种方式
+1. 绝对路径
+```js
+{
+    test: /\.js$/,
+    use: path.resolve(__dirname,'loader', 'loader1.js')
+}
+```
+
+2. resolveLoader:解析loader时的处理
+```js
+resolveLoader:{
+    // 查找loader的路径范围，如果node_modules没有，则查找当前目录下的loaders目录
+    modules: ['node_modules', path.resolve(__dirname,'loaders')],
+    alias:{
+        'loader1': path.resolve(__dirname, 'loaders', 'loader1')
+    }
+}
+
+// {
+//     test: /\.js$/,
+//     use: 'loader1'
+// }
+```
+
+或者
+
+```js
+resolveLoader:{
+    // 给loader起别名
+    alias:{
+        'loader1': path.resolve(__dirname, 'loaders', 'loader1')
+    }
+}
+```
+
+## loader的执行顺序
+- 从左到右
+
+```js
+{
+    test: /\.js$/,
+    use: [
+        'loader1','loader2','loader3'
+    ]
+}
+```
+- 从上到下
+
+```js
+{
+    test: /\.js$/,
+    use: 'loader1'
+},
+{
+    test: /\.js$/,
+    use: 'loader2'
+},
+{
+    test: /\.js$/,
+    use: 'loader3'
+}
+```
+
+### 改变顺序
+enforce属性
+1. pre： 最先执行
+2. post：最后执行
+3. normal : 默认值
+4. inline： 行内loader
+5. 整体执行顺序： pre > normal > inline > post
+
+> 每个类别出现多次，则同类别中按照从右到左，从下到上的顺序执行
+
+## inline-loader
+```js
+// -! 没有pre normal
+// ! 没有normal
+// !! 什么都没有，只要inlineloader
+let a = require('inline-loader!./a.js')
+// let a = require('!!inline-loader!./a.js')
+
+// 顺序
+// loader1 pre
+// loader2 normal
+// inline - loader
+// loader3 post
+```
+
+## loader组成
+loader默认由2部分组成，pitch和normal
+
+- pitch loader 无返回值
+1. Pitch Loader3 -> Loader2 -> Loader1 
+2. resource
+3. Normal: Loader1 -> Loader2 -> Loader3
+
+- pitch loader 有返回值
+pictch loader2有返回值, 则只执行
+1. Pitch Loader3 -> Loader2
+2. Normal Loader3
+
+此时资源也不会被打包，起到了中断的作用
+
+## loader的特点
+- 最后一个执行的loader要返回js脚本（需要一个String或者Buffer）
+- 每个loader只做一件内容，为了使loader在更多场景链式调用
+- 每个loader都是一个模块
+- 每个loader都是无状态的，确保loader在不同模块转换之间不保存状态
+
 ## style-loader
 >css文件有空行、空格分隔，可以用JSON.stringify来控制成为一行。
 

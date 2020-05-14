@@ -17,6 +17,12 @@ module.exports = {
         filename: 'bundle.js',
         path: path.resolve(__dirname, 'dist')        
     },
+    // resolveLoader:{
+    //     modules: ['node_modules', path.resolve(__dirname,'loader')],
+    //     alias:{
+    //         'loader1': path.resolve(__dirname, 'loader', 'loader1')
+    //     }
+    // },
     module: {
         rules: [
             {

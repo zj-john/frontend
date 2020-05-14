@@ -5,7 +5,7 @@ let traverse = require('@babel/traverse').default;
 let t = require('@babel/types');
 let generator = require('@babel/generator').default;
 let ejs = require('ejs');
-let { SyncHook } = require('tapable')
+let { SyncHook } = require('tapable');
 
 // 需要用到的模块
 // babylon 把源码转换为ast
@@ -39,6 +39,7 @@ class Compiler{
                 plugin.apply(this);
             })
         }
+        this.hooks.afterPlugins.call();
     }
     getSource(modulePath) {
         let content = fs.readFileSync(modulePath,'utf8');
@@ -136,11 +137,16 @@ class Compiler{
     }
 
     run() {
+        this.hooks.run.call();
+        this.hooks.compiler.call();
         // 创建模块的依赖关系
         this.buildModule(path.resolve(this.root, this.entry), true);
         // console.log(this.modules, this.entryId);
+        this.hooks.afterCompiler.call();        
         // 发射一个文件，打包后的文件
         this.emitFile();
+        this.hooks.emit.call();
+        this.hooks.done.call();
     }
 }
 
