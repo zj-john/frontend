@@ -91,10 +91,27 @@
   !*** ./src/index.js ***!
   \**********************/
 /*! no static exports found */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-eval("console.log(\"index\");\r\n// -! 没有pre normal\r\n// ! 没有normal\r\n// !! 什么都没有，只要inlineloader\r\n// let a = require('inline-loader!./a.js')\n\n//# sourceURL=webpack:///./src/index.js?");
+"use strict";
+
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+console.log("index"); // -! 没有pre normal
+// ! 没有normal
+// !! 什么都没有，只要inlineloader
+// let a = require('inline-loader!./a.js')
+
+var Test = function Test() {
+  _classCallCheck(this, Test);
+
+  console.log("test init");
+};
+
+var test = new Test();
 
 /***/ })
 
 /******/ });
+//# sourceMappingURL=bundle.js.map

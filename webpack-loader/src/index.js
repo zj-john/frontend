@@ -3,3 +3,11 @@ console.log("index");
 // ! 没有normal
 // !! 什么都没有，只要inlineloader
 // let a = require('inline-loader!./a.js')
+
+class Test {
+    constructor() {
+        console.log("test init")
+    }
+}
+
+let test = new Test();

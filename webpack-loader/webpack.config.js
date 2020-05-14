@@ -13,8 +13,23 @@ module.exports = {
         //     'loader1': path.resolve(__dirname, 'loaders', 'loader1')
         // }
     },
+    devtool: 'source-map',
     module: {
         rules: [
+            {
+                test: /\.js$/,
+                // use: path.resolve(__dirname, 'loaders', 'loader1')
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        presets:[
+                            '@babel/preset-env'
+                        ]
+                    }
+                    
+                }
+            }
+
             // {
             //     test: /\.js$/,
             //     // use: path.resolve(__dirname, 'loaders', 'loader1')
@@ -28,20 +43,20 @@ module.exports = {
             //     ]
             // },
             // 从下向上执行
-            {
-                test: /\.js$/,
-                use: 'loader1',
-                enforce: 'pre'
-            },
-            {
-                test: /\.js$/,
-                use: 'loader2'
-            },
-            {
-                test: /\.js$/,
-                use: 'loader3',
-                enforce: 'post'
-            }
+            // {
+            //     test: /\.js$/,
+            //     use: 'loader1',
+            //     enforce: 'pre'
+            // },
+            // {
+            //     test: /\.js$/,
+            //     use: 'loader2'
+            // },
+            // {
+            //     test: /\.js$/,
+            //     use: 'loader3',
+            //     enforce: 'post'
+            // }
         ]
     }
 }
