@@ -298,7 +298,7 @@ document.body.appendChild(image);
 ```
 
 适配loader
-- file-loader
+- file-loader:file-loader默认会在内部生成一张图片到build目录下，然后把生成的图片名字返回回来
 - url-loader : 可以处理文件，还可以把img转换为base64代码，减少http请求
 
 2. 在css中引入 background('url')

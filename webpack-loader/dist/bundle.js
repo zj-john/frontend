@@ -86,6 +86,17 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./src/animal.jpg":
+/*!************************!*\
+  !*** ./src/animal.jpg ***!
+  \************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports="d09fc0d5.jpg"
+
+/***/ }),
+
 /***/ "./src/index.js":
 /*!**********************!*\
   !*** ./src/index.js ***!
@@ -96,20 +107,24 @@
 "use strict";
 
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+var _animal = _interopRequireDefault(__webpack_require__(/*! ./animal.jpg */ "./src/animal.jpg"));
 
-console.log("index"); // -! 没有pre normal
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+// console.log("index");
+// -! 没有pre normal
 // ! 没有normal
 // !! 什么都没有，只要inlineloader
 // let a = require('inline-loader!./a.js')
-
-var Test = function Test() {
-  _classCallCheck(this, Test);
-
-  console.log("test init");
-};
-
-var test = new Test();
+// class Test {
+//     constructor() {
+//         console.log("test init")
+//     }
+// }
+// let test = new Test();
+var img = document.createElement('img');
+img.src = _animal["default"];
+document.body.appendChild(img);
 
 /***/ })
 
