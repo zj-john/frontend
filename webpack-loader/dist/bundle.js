@@ -96,20 +96,36 @@
 "use strict";
 
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+var _pic = _interopRequireDefault(__webpack_require__(/*! ./pic.jpg */ "./src/pic.jpg"));
 
-console.log("index"); // -! 没有pre normal
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+/**这里是文本注释**/
+// console.log("index");
+// -! 没有pre normal
 // ! 没有normal
 // !! 什么都没有，只要inlineloader
 // let a = require('inline-loader!./a.js')
+// class Test {
+//     constructor() {
+//         console.log("test init")
+//     }
+// }
+// let test = new Test();
+var img = document.createElement("img");
+img.src = _pic["default"];
+document.appendChild(img);
 
-var Test = function Test() {
-  _classCallCheck(this, Test);
+/***/ }),
 
-  console.log("test init");
-};
+/***/ "./src/pic.jpg":
+/*!*********************!*\
+  !*** ./src/pic.jpg ***!
+  \*********************/
+/*! no static exports found */
+/***/ (function(module, exports) {
 
-var test = new Test();
+throw new Error("Module parse failed: Unexpected character '�' (1:0)\nFile was processed with these loaders:\n * ./loaders/file-loader.js\nYou may need an additional loader to handle the result of these loaders.\n(Source code omitted for this binary file)");
 
 /***/ })
 

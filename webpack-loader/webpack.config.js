@@ -14,11 +14,15 @@ module.exports = {
         // }
     },
     devtool: 'source-map',
+    // watch:true,
     module: {
         rules: [
             {
+                test: /\.jpg$/,
+                use:'file-loader'
+            },
+            {
                 test: /\.js$/,
-                // use: path.resolve(__dirname, 'loaders', 'loader1')
                 use: {
                     loader: 'babel-loader',
                     options: {
@@ -27,6 +31,18 @@ module.exports = {
                         ]
                     }
                     
+                }
+            },
+            {
+                test: /\.js$/,
+                use: {
+                    // 添加注释 /*xxx*/
+                    loader: 'banner-loader',
+                    options: {
+                        // 文本
+                        text: "这里是注释",
+                        filename: path.resolve(__dirname,'banner.js')                        
+                    }                    
                 }
             }
 
