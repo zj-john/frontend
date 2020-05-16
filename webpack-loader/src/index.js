@@ -11,7 +11,7 @@
 // }
 
 // let test = new Test();
-
+import './index.less'
 import pic from './animal.jpg'
 let img = document.createElement('img');
 img.src = pic;
