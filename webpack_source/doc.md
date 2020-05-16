@@ -212,3 +212,69 @@ function loader(source) {
 
 module.exports = loader
 ```
+
+## babel-loader
+```js
+let babel = require('@babel/core');
+let loaderUtils = require('loader-utils');
+function loader(source) {
+    // console.log("babel-loader",this);
+    console.log(this.resourcePath);
+    let options = loaderUtils.getOptions(this); // 获取config中的option值
+    // loader的context中自带的方法，用于异步回调
+    let cb = this.async();
+    babel.transform(source, {
+        ...options,
+        // config中devtool也需要开启source-map后才能生成
+        sourceMap:true,
+        // 如果不给sourcemap加名字，默认为unknown
+        filename: this.resourcePath.split('/').pop()
+    }, function(err,result){
+        // console.log(err, result);
+        // 错误，转换后的代码，sourceMap
+        cb(err, result.code, result.map)
+    })
+    // console.log(options);
+    // return source;
+}
+module.exports = loader;
+```
+
+
+## file-loader
+```js
+/**
+ * 根据图片生一个新的图片发送到dist目录下
+*/
+let loaderUtils = require("loader-utils");
+function loader(source) {
+    // ext:资源的扩展, [hash:8].[ext]:8位hash带后缀名的文件名
+    let filename = loaderUtils.interpolateName(this, '[hash:8].[ext]', {content: source}); //文件名模板
+    console.log(filename);
+    this.emitFile(filename, source); // 发射文件：会生成一个文件
+    return `module.exports="${filename}"`
+}
+loader.raw = true; // 以二进制的方式展示source
+module.exports = loader;
+```
+
+## url-loader
+```js
+/**
+ * 把符合规则的图片的base64码插入图片
+*/
+let loaderUtils = require("loader-utils");
+let mime = require("mime");
+function loader(source) {
+    let {limit} = loaderUtils.getOptions(this);
+    if(limit && limit > source.length) {
+        // 改变为base64
+        // data:image/jpg;base64
+        return `module.exports = "data:${mime.getType(this.resourcePath)};base64,${source.toString('base64')}"`
+    } else {
+        return require('./file-loader').call(this, source)
+    }
+}
+loader.raw = true;
+module.exports = loader;
+```

@@ -19,7 +19,15 @@ module.exports = {
         rules: [
             {
                 test: /\.jpg$/,
-                use:'file-loader'
+                // use: {
+                //     loader:'file-loader'
+                // }
+                use: {
+                    loader: 'url-loader',
+                    options: {
+                        limit: 20 * 1024 // 20k
+                    }
+                }
             },
             {
                 test: /\.js$/,
@@ -29,8 +37,7 @@ module.exports = {
                         presets:[
                             '@babel/preset-env'
                         ]
-                    }
-                    
+                    }                    
                 }
             },
             {
@@ -45,7 +52,6 @@ module.exports = {
                     }                    
                 }
             }
-
             // {
             //     test: /\.js$/,
             //     // use: path.resolve(__dirname, 'loaders', 'loader1')

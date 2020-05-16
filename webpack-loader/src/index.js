@@ -12,7 +12,7 @@
 
 // let test = new Test();
 
-import pic from './pic.jpg';
-let img = document.createElement("img");
+import pic from './animal.jpg'
+let img = document.createElement('img');
 img.src = pic;
-document.appendChild(img)
+document.body.appendChild(img);
