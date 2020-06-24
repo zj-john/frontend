@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://prosemirror.net/css/editor.css" />
+
+    <title>Prosemirror</title>
+    <style>
+      #demo {
+        padding: 20px;
+        border: 1px solid greenyellow;
+        box-sizing: content-box;
+      }
+      #myEditor {
+        border: 1px solid greenyellow;
+        position: relative;
+        /* height: 500px; */
+        /* width: 1000px; */
+      }
+      img.dinosaur {
+        height: 40px;
+        vertical-align: bottom;
+        border: 1px solid #0ae;
+        border-radius: 4px;
+        background: #ddf6ff;
+      }
+      .tooltip {
+        position: absolute;
+        pointer-events: none;
+        z-index: 20;
+        background: white;
+        border: 1px solid silver;
+        border-radius: 2px;
+        padding: 2px 10px;
+        margin-bottom: 7px;
+        -webkit-transform: translateX(-50%);
+        transform: translateX(-50%);
+      }
+      .tooltip:before {
+        content: "";
+        height: 0;
+        width: 0;
+        position: absolute;
+        left: 50%;
+        margin-left: -5px;
+        bottom: -6px;
+        border: 5px solid transparent;
+        border-bottom-width: 0;
+        border-top-color: silver;
+      }
+      .tooltip:after {
+        content: "";
+        height: 0;
+        width: 0;
+        position: absolute;
+        left: 50%;
+        margin-left: -5px;
+        bottom: -4.5px;
+        border: 5px solid transparent;
+        border-bottom-width: 0;
+        border-top-color: white;
+      }
+      #demo #tooltips .editor {
+        position: relative;
+      }
+      placeholder {
+        display: inline;
+        border: 1px solid #ccc;
+        color: #ccc;
+      }
+      placeholder:after {
+        content: "☁";
+        font-size: 200%;
+        line-height: 0.1;
+        font-weight: bold;
+      }
+      .menubar {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+        line-height: 0.1;
+      }
+      .menuicon {
+        display: inline-block;
+        border-right: 1px solid rgba(0, 0, 0, 0.2);
+        line-height: 1.8em;
+        padding: 0 7px;
+        margin: 1px;
+        cursor: pointer;
+        text-align: center;
+        min-width: 1.4em;
+      }
+      .strong,
+      .heading {
+        font-weight: bold;
+      }
+      .em {
+        font-style: italic;
+      }
+      footnote {
+        display: inline-block;
+        position: relative;
+        cursor: pointer;
+      }
+      footnote::after {
+        content: counter(prosemirror-footnote);
+        vertical-align: super;
+        font-size: 75%;
+        counter-increment: prosemirror-footnote;
+      }
+      .ProseMirror-hideselection .footnote-tooltip *::selection {
+        background-color: transparent;
+      }
+      .ProseMirror-hideselection .footnote-tooltip *::-moz-selection {
+        background-color: transparent;
+      }
+      .footnote-tooltip {
+        cursor: auto;
+        position: absolute;
+        left: -30px;
+        top: calc(100% + 10px);
+        background: silver;
+        padding: 3px;
+        border-radius: 2px;
+        width: 500px;
+      }
+      .footnote-tooltip::before {
+        border: 5px solid silver;
+        border-top-width: 0px;
+        border-left-color: transparent;
+        border-right-color: transparent;
+        position: absolute;
+        top: -5px;
+        left: 27px;
+        content: " ";
+        height: 0;
+        width: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="demo">
+      <h2>官网DEMO</h2>
+      <div id="basic">
+        <h3>Basic</h3>
+        <div class="editor" style="margin-bottom: 23px;"></div>
+        <div style="display: none;" class="content">
+          <h3>Hello ProseMirror</h3>
+
+          <p>This is editable text. You can focus it and start typing.</p>
+
+          <p>
+            To apply styling, you can select a piece of text and manipulate its
+            styling from the menu. The basic schema supports <em>emphasis</em>,
+            <strong>strong text</strong>,
+            <a href="http://marijnhaverbeke.nl/blog">links</a>,
+            <code>code font</code>, and
+            <img src="http://lorempixel.com/100/100" /> images.
+          </p>
+
+          <p>
+            Block-level structure can be manipulated with key bindings (try
+            ctrl-shift-2 to create a level 2 heading, or enter in an empty
+            textblock to exit the parent block), or through the menu.
+          </p>
+
+          <p>
+            Try using the “list” item in the menu to wrap this paragraph in a
+            numbered list.
+          </p>
+        </div>
+      </div>
+      <div id="dinos_in_the_document">
+        <h3>dinos_in_the_document</h3>
+        <div class="editor"></div>
+        <div style="display: none;" class="content">
+          <p>
+            This is your dinosaur-enabled editor. The insert menu allows you to
+            insert dinosaurs.
+          </p>
+          <p>
+            This paragraph <img class="dinosaur" dino-type="stegosaurus" />, for
+            example,
+            <img class="dinosaur" dino-type="triceratops" />
+            is full <img class="dinosaur" dino-type="tyrannosaurus" /> of
+            dinosaurs.
+          </p>
+          <p>
+            Dinosaur nodes can be selected, copied, pasted, dragged, and so on.
+          </p>
+        </div>
+      </div>
+      <div id="friendly_markdown">
+        <h3>friendly_markdown</h3>
+        <div class="editor"></div>
+
+        <input type="radio" value="markdown" name="view" checked />markdown
+        <input type="radio" value="prosemirror" name="view" />prosemirror
+      </div>
+      <div id="tooltips">
+        <h3>tooltips</h3>
+        <div class="editor"></div>
+      </div>
+      <div id="upload_handling">
+        <h2>upload_handling</h2>
+        <div class="editor"></div>
+        <div class="content"></div>
+        <div>Insert image: <input type="file" id="image-upload" /></div>
+      </div>
+      <div id="schemas_from_scratch">
+        <h2>schemas_from_scratch</h2>
+        <p>Inline editor: <span id="text-editor"></span></p>
+
+        <style>
+          #text-editor {
+            background-color: rgba(0, 0, 0, 0.05);
+            padding: 0;
+          }
+          .ProseMirror {
+            min-height: none !important;
+          }
+          .ProseMirror a {
+            text-decoration: underline;
+          }
+          note,
+          notegroup {
+            display: block;
+            border: 1px solid silver;
+            border-radius: 3px;
+            padding: 3px 6px;
+            margin: 5px 0;
+          }
+          notegroup {
+            border-color: #66f;
+          }
+          p.boring {
+            background: #eee;
+            color: #444;
+          }
+          shouting {
+            display: inline;
+            text-transform: uppercase;
+            font-weight: bold;
+          }
+          star {
+            display: inline;
+            font-size: 190%;
+            line-height: 1;
+            vertical-align: -10%;
+            color: #a8f;
+            -webkit-text-stroke: 1px #75b;
+          }
+        </style>
+
+        <div id="note-editor"></div>
+
+        <div id="star-editor" class="editor"></div>
+
+        <div style="display: none;">
+          <div id="text-content">Such as this sentence.</div>
+          <div id="note-content">
+            <note>Do laundry</note>
+            <note>Water the tomatoes</note>
+            <notegroup>
+              <note>Buy flour</note>
+              <note>Get toilet paper</note>
+            </notegroup>
+          </div>
+          <div id="star-content">
+            <p>
+              This is a <star></star>nice<star></star> paragraph, it can have
+              <shouting>anything</shouting> in it.
+            </p>
+            <p class="boring">
+              This paragraph is boring, it can't have anything.
+            </p>
+            <p>
+              Press ctrl/cmd-i to insert a star, ctrl/cmd-b to toggle
+              shouting（加粗）, and ctrl/cmd-l to add or remove a
+              link（超链接）.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div id="adding_a_menu">
+        <h2>adding_a_menu</h2>
+        <div class="editor"></div>
+        <div class="content" style="display: none;">
+          <h3>Simple editor</h3>
+          <p>With a very crude menu bar.</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="test">
+      <h2>测试</h2>
+      <div id="myEditor"></div>
+      <div id="content" style="display: none;">
+        <h3>Simple editor</h3>
+        <p>With a very crude menu bar.</p>
+        <strong>strong text</strong>,
+        <a href="http://marijnhaverbeke.nl/blog">links</a>,
+        <code>code font</code>, and
+        <img src="http://lorempixel.com/100/100" /> images.
+      </div>
+    </div>
+  <script src="main.js"></script></body>
+</html>
