@@ -135,6 +135,21 @@
         height: 0;
         width: 0;
       }
+      table {
+    margin: 0;
+  }
+  th, td {
+    min-width: 1em;
+    border: 1px solid #ddd;
+    padding: 3px 5px;
+  }
+  .tableWrapper {
+    margin: 1em 0;
+  }
+  th {
+    font-weight: bold;
+    text-align: left;
+  }
     </style>
   </head>
   <body>
@@ -301,6 +316,11 @@
         <a href="http://marijnhaverbeke.nl/blog">links</a>,
         <code>code font</code>, and
         <img src="http://lorempixel.com/100/100" /> images.
+        <table>
+          <tr><th colspan=3 data-colwidth="100,0,0">Wide header</td></tr>
+          <tr><td>One</td><td>Two</td><td>Three</td></tr>
+          <tr><td>Four</td><td>Five</td><td>Six</td></tr>
+        </table>
       </div>
     </div>
   </body>

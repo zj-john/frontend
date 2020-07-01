@@ -10,7 +10,29 @@ import {
 } from "prosemirror-commands";
 import { undo, redo, history } from "prosemirror-history";
 import { addListNodes, wrapInList } from "prosemirror-schema-list";
-import { schema } from "prosemirror-schema-basic";
+import { StepMap } from "prosemirror-transform";
+import {
+  addColumnAfter,
+  addColumnBefore,
+  deleteColumn,
+  addRowAfter,
+  addRowBefore,
+  deleteRow,
+  mergeCells,
+  splitCell,
+  setCellAttr,
+  toggleHeaderRow,
+  toggleHeaderColumn,
+  toggleHeaderCell,
+  goToNextCell,
+  deleteTable,
+} from "prosemirror-tables";
+import {
+  tableEditing,
+  columnResizing,
+  tableNodes,
+  fixTables,
+} from "prosemirror-tables";
 
 const editorDom = document.querySelector("#myEditor");
 const contentDom = document.querySelector("#content");
@@ -165,6 +187,7 @@ class FootnoteView {
 
   //   Can be used to override the way the node's selected status (as a node selection) is displayed.
   selectNode() {
+    console.log("select footnode");
     this.dom.classList.add("ProseMirror-selectednode");
     if (!this.innerView) this.open();
   }
@@ -266,6 +289,44 @@ class FootnoteView {
   }
 }
 
+class DocView {
+  constructor(node, view, getPos) {
+    // We'll need these later
+    this.node = node;
+    this.view = view;
+    this.getPos = getPos;
+  }
+  selectNode() {
+    console.log("select", this.node, this.view);
+    this.node.attrs.title = "当前被选中";
+  }
+
+  deselectNode() {
+    console.log("unselect");
+  }
+}
+
+class ImageView {
+  constructor(node, view, getPos) {
+    // We'll need these later
+    this.node = node;
+    this.outerView = view;
+    this.getPos = getPos;
+  }
+  selectNode() {
+    console.log("select", this.outerView);
+    let state = this.outerView.state;
+    let $head = state.selection.$head;
+    for (var d = $head.depth; d > 0; d--) {
+      console.log($head.node(d).type.spec);
+    }
+  }
+
+  deselectNode() {
+    console.log("unselect");
+  }
+}
+
 // :: Object [Specs](#model.MarkSpec) for the marks in the schema.
 const marks = {
   // :: MarkSpec A link. Has `href` and `title` attributes. `title`
@@ -334,44 +395,44 @@ const marks = {
   },
   fontsize: {
     attrs: {
-        dataSize: { default: 14 },
+      dataSize: { default: 14 },
+    },
+    parseDOM: [
+      {
+        tag: "font",
+        getAttrs: (dom) => {
+          const size = dom.getAttribute("data-size") || 14;
+          return {
+            dataSize: size,
+          };
+        },
       },
-      parseDOM: [
-        {
-          tag: "font",
-          getAttrs: (dom) => {
-            const size = dom.getAttribute("data-size") || 14;
-            return {
-              dataSize: size,
-            };
-          },
+      {
+        style: "font-size",
+        getAttrs: (fs) => {
+          let dataSize = fs;
+          if (dataSize.indexOf("px") >= 0) dataSize = dataSize.split("px")[0];
+          if (dataSize.indexOf("em") >= 0 || dataSize.indexOf("rem") >= 0) {
+            dataSize = "14";
+          }
+          return {
+            dataSize,
+          };
         },
-        {
-          style: "font-size",
-          getAttrs: (fs) => {
-            let dataSize = fs;
-            if (dataSize.indexOf("px") >= 0) dataSize = dataSize.split("px")[0];
-            if (dataSize.indexOf("em") >= 0 || dataSize.indexOf("rem") >= 0) {
-              dataSize = "14";
-            }
-            return {
-              dataSize,
-            };
-          },
-        },
-      ],
-      toDOM(node) {
-        let fontSize = node.attrs.dataSize;
-        if (fontSize) fontSize = `${fontSize}px`;
+      },
+    ],
+    toDOM(node) {
+      let fontSize = node.attrs.dataSize;
+      if (fontSize) fontSize = `${fontSize}px`;
 
-        const style = {
-          style: `font-size:${fontSize}`,
-          "data-size": node.attrs.dataSize,
-        };
+      const style = {
+        style: `font-size:${fontSize}`,
+        "data-size": node.attrs.dataSize,
+      };
 
-        return ["font", style];
-      }
-  }
+      return ["font", style];
+    },
+  },
 };
 
 const basicSchema = new Schema({
@@ -381,7 +442,28 @@ const basicSchema = new Schema({
 
 const mySchema = new Schema({
   // 添加列表类型
-  nodes: addListNodes(basicSchema.spec.nodes, "paragraph block*", "block"),
+  nodes: addListNodes(
+    basicSchema.spec.nodes,
+    "paragraph block*",
+    "block"
+  ).append(
+    tableNodes({
+      tableGroup: "block",
+      cellContent: "block+",
+      cellAttributes: {
+        background: {
+          default: null,
+          getFromDOM(dom) {
+            return dom.style.backgroundColor || null;
+          },
+          setDOMAttr(value, attrs) {
+            if (value)
+              attrs.style = (attrs.style || "") + `background-color: ${value};`;
+          },
+        },
+      },
+    })
+  ),
   marks: basicSchema.spec.marks,
   //   nodes: nodes,
 });
@@ -506,7 +588,11 @@ function startImageUpload(view, file) {
         view.state.tr.replaceWith(
           pos,
           pos,
-          mySchema.nodes.image.create({ src: url })
+          mySchema.nodes.image.create({
+            src: url,
+            alt: "img",
+            title: file.name,
+          })
         )
       );
     },
@@ -536,6 +622,7 @@ const insertCommand = (type) => (state, dispatch) => {
 };
 
 const footnoteCommand = () => (state, dispatch, view) => {
+  debugger;
   let { empty, $from, $to } = state.selection,
     content = Fragment.empty;
   if (!empty && $from.sameParent($to) && $from.parent.inlineContent)
@@ -614,6 +701,39 @@ const menuConfig = [
     command: footnoteCommand(),
     dom: domAction.createMenuItem("Footnote", "footnote"),
   },
+  {
+    command: addColumnBefore,
+    dom: domAction.createMenuItem(
+      "Insert column before",
+      "Insert column before"
+    ),
+  },
+  {
+    command: deleteRow,
+    dom: domAction.createMenuItem(
+      "Delete row",
+      "Delete row"
+    ),
+  },
+  {
+    command: deleteColumn,
+    dom: domAction.createMenuItem(
+      "Delete column",
+      "Delete column"
+    ),
+  },
+  // item("Insert column before", addColumnBefore),
+  // item("Insert column after", addColumnAfter),
+  // item("Insert row before", addRowBefore),
+  // item("Insert row after", addRowAfter),
+  // item("Delete table", deleteTable),
+  // item("Merge cells", mergeCells),
+  // item("Split cell", splitCell),
+  // item("Toggle header column", toggleHeaderColumn),
+  // item("Toggle header row", toggleHeaderRow),
+  // item("Toggle header cells", toggleHeaderCell),
+  // item("Make cell green", setCellAttr("background", "#dfd")),
+  // item("Make cell not-green", setCellAttr("background", null))
 ];
 
 console.log("mySchema", mySchema);
@@ -628,9 +748,13 @@ let state = EditorState.create({
       "Mod-z": undo,
       "Mod-y": redo,
       "Mod-b": toggleMark(mySchema.marks.strong),
+      Tab: goToNextCell(1),
+      "Shift-Tab": goToNextCell(-1),
     }),
     menuPlugin(menuConfig),
     tooltipPlugin,
+    columnResizing(),
+    tableEditing(),
   ],
 });
 let view = new EditorView(editorDom, {
@@ -638,6 +762,12 @@ let view = new EditorView(editorDom, {
   nodeViews: {
     footnote(node, view, getPos) {
       return new FootnoteView(node, view, getPos);
+    },
+    code_block(node, view, getPos) {
+      return new DocView(node, view, getPos);
+    },
+    image(node, view, getPos) {
+      return new ImageView(node, view, getPos);
     },
   },
 });
