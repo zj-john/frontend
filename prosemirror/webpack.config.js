@@ -10,7 +10,7 @@ module.exports = {
   devServer: {
     port: 3000, // 端口默认8080,
     progress: true, // 显示打包进度
-    contentBase: "./build", // express的静态目录
+    // contentBase: "./build", // express的静态目录
     // compress: true, // 是否开启压缩,
     // open: true, // 完成后，自动在浏览器打开地址，如localhost:3000
   },

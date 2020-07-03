@@ -1,0 +1,28 @@
+.editor-menu {
+  width: 100%;
+  display: flex;
+  align-content: center;
+  border-bottom: 1px solid silver;
+}
+.menu-group {
+  padding: 10px;
+  display: flex;
+  justify-content: space-evenly;
+}
+.menu-group::after {
+    content:'';
+    border-right: 1px solid silver;
+}
+.menu-item {
+  padding: 5px;
+  font-size: 14px;
+  line-height: 1.5em;
+  display: flex;
+}
+.menu-select select {
+  height: 100%;
+}
+.menu-item,
+.menu-select {
+  margin-right: 10px;
+}

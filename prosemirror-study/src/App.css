@@ -1,0 +1,10 @@
+.editor-wrapper {
+  width: 100%;
+}
+.editor {
+  border: 1px solid silver;
+  border-top: none;
+}
+.editor .ProseMirror {
+  min-height: 600px;
+}
