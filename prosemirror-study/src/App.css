@@ -5,6 +5,8 @@
   border: 1px solid silver;
   border-top: none;
 }
-.editor .ProseMirror {
-  min-height: 600px;
+.submit {
+  position: fixed;
+  top: 10px;
+  right: 10px;
 }

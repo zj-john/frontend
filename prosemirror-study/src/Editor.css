@@ -1,0 +1,6 @@
+.ProseMirror {
+    min-height: 600px;
+}
+.ProseMirror-focused {
+    background-color: lightgrey;
+}

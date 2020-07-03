@@ -2,14 +2,20 @@ import React, { Component, PureComponent } from "react";
 import "./index.css";
 
 export default class MenuView extends PureComponent {
+
+  handleSelect = (e, options) =>{
+    const value = e.target.value;
+    const command = options.find(i=>i.text===value).command;
+    command.apply(null);
+  }
   renderMenuItem = (menuGroup) => {
     return menuGroup.map((menuItem) => {
       return menuItem.type === "select" ? (
         <div className="menu-select" key={menuItem.title}>
-          <select>
+          <select onChange={(e) =>this.handleSelect(e, menuItem.options)}>
             {menuItem.options.map((o) => {
               return (
-                <option onClick={!o.disabled && o.command} key={o.text}> {o.text}</option>
+              <option key={o.text}> {o.text}</option>
               );
             })}
           </select>
