@@ -8491,6 +8491,14 @@ prosemirror-commands@^1.1.4:
     prosemirror-state "^1.0.0"
     prosemirror-transform "^1.0.0"
 
+prosemirror-keymap@^1.1.4:
+  version "1.1.4"
+  resolved "http://r.npm.sankuai.com/prosemirror-keymap/download/prosemirror-keymap-1.1.4.tgz#8b481bf8389a5ac40d38dbd67ec3da2c7eac6a6d"
+  integrity sha1-i0gb+DiaWsQNONvWfsPaLH6sam0=
+  dependencies:
+    prosemirror-state "^1.0.0"
+    w3c-keyname "^2.2.0"
+
 prosemirror-model@^1.0.0, prosemirror-model@^1.1.0, prosemirror-model@^1.10.0:
   version "1.10.0"
   resolved "http://r.npm.sankuai.com/prosemirror-model/download/prosemirror-model-1.10.0.tgz#bb1101732bccacf336e23a36a8b045b865025fa2"
@@ -10491,6 +10499,11 @@ w3c-hr-time@^1.0.1:
   integrity sha1-ConN9cwVgi35w2BUNnaWPgzDCM0=
   dependencies:
     browser-process-hrtime "^1.0.0"
+
+w3c-keyname@^2.2.0:
+  version "2.2.4"
+  resolved "http://r.npm.sankuai.com/w3c-keyname/download/w3c-keyname-2.2.4.tgz#4ade6916f6290224cdbd1db8ac49eab03d0eef6b"
+  integrity sha1-St5pFvYpAiTNvR24rEnqsD0O72s=
 
 w3c-xmlserializer@^1.1.2:
   version "1.1.2"

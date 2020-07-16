@@ -15,6 +15,18 @@ const basicNodes = {
   },
 };
 
+const brNode = {
+    hard_break: {
+        inline: true,
+        group: "inline",
+        selectable: false,
+        parseDOM: [{ tag: "br" }],
+        toDOM() {
+          return ["br"];
+        },
+      }
+}
+
 const headingNode = {
   heading: {
     attrs: { level: { default: 1 } },
@@ -37,6 +49,7 @@ const headingNode = {
 const nodes = {
   ...basicNodes,
   ...headingNode,
+//   ...brNode
 };
 
 const marks = {
